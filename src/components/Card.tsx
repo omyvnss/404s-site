@@ -58,30 +58,32 @@ export function Card({ domain, url, index, name }: CardProps) {
 
   return (
     <article className="card" style={{ animationDelay: `${delay}ms` }}>
-      <div className="card-image">
-        {!imgError ? (
-          <>
-            {!imgLoaded && (
-              <div className="placeholder" style={{ backgroundImage: `url(${getPlaceholderSvg(domain)})` }} />
-            )}
-            {imgSrc && (
-              <img
-                src={imgSrc}
-                alt={`${displayName} 404 page screenshot`}
-                loading="lazy"
-                decoding="async"
-                onLoad={handleLoad}
-                onError={handleError}
-                className={`w-full h-full object-cover transition-transform duration-300 ${
-                  imgLoaded ? 'opacity-100' : 'opacity-0'
-                }`}
-              />
-            )}
-          </>
-        ) : (
-          <div className="placeholder" style={{ backgroundImage: `url(${getPlaceholderSvg(domain)})` }} />
-        )}
-      </div>
+      <a href={cleanUrl} target="_blank" rel="noopener noreferrer" className="card-link" aria-label={`View ${displayName} 404 page`}>
+        <div className="card-image">
+          {!imgError ? (
+            <>
+              {!imgLoaded && (
+                <div className="placeholder" style={{ backgroundImage: `url(${getPlaceholderSvg(domain)})` }} />
+              )}
+              {imgSrc && (
+                <img
+                  src={imgSrc}
+                  alt={`${displayName} 404 page screenshot`}
+                  loading="lazy"
+                  decoding="async"
+                  onLoad={handleLoad}
+                  onError={handleError}
+                  className={`w-full h-full object-contain transition-opacity duration-200 ${
+                    imgLoaded ? 'opacity-100' : 'opacity-0'
+                  }`}
+                />
+              )}
+            </>
+          ) : (
+            <div className="placeholder" style={{ backgroundImage: `url(${getPlaceholderSvg(domain)})` }} />
+          )}
+        </div>
+      </a>
 
       <div className="card-meta">
         <img
