@@ -1,15 +1,15 @@
 import { useState, useCallback, useEffect } from 'react'
-import { ExternalLink } from 'lucide-react'
-import { getScreenshotProviders, getFaviconUrl, getPlaceholderSvg, extractDomain } from '../lib/screenshots'
+import { getScreenshotProviders, getFaviconUrl, getPlaceholderSvg } from '../lib/screenshots'
 
 interface CardProps {
   domain: string
   url: string
   dateAdded: string
   index: number
+  name?: string
 }
 
-export function Card({ domain, url, dateAdded, index }: CardProps) {
+export function Card({ domain, url, index, name }: CardProps) {
   const [imgSrc, setImgSrc] = useState<string | null>(null)
   const [imgError, setImgError] = useState(false)
   const [imgLoaded, setImgLoaded] = useState(false)
@@ -18,7 +18,7 @@ export function Card({ domain, url, dateAdded, index }: CardProps) {
   const cleanUrl = url.replace(/\?via=404sdesign/g, '').trim()
   const providers = getScreenshotProviders(cleanUrl)
   const faviconUrl = getFaviconUrl(cleanUrl)
-  const displayName = extractDomain(domain)
+  const displayName = name || domain
 
   const tryNextProvider = useCallback(() => {
     if (providerIndex < providers.length - 1) {
@@ -57,8 +57,8 @@ export function Card({ domain, url, dateAdded, index }: CardProps) {
   const delay = Math.min(index * 20, 200)
 
   return (
-    <article className="website" style={{ animationDelay: `${delay}ms` }}>
-      <div className="image">
+    <article className="card" style={{ animationDelay: `${delay}ms` }}>
+      <div className="card-image">
         {!imgError ? (
           <>
             {!imgLoaded && (
@@ -67,44 +67,31 @@ export function Card({ domain, url, dateAdded, index }: CardProps) {
             {imgSrc && (
               <img
                 src={imgSrc}
-                alt={`${domain} 404 page screenshot`}
+                alt={`${displayName} 404 page screenshot`}
                 loading="lazy"
                 decoding="async"
                 onLoad={handleLoad}
                 onError={handleError}
-                className={`w-full aspect-square object-cover transition-opacity duration-200 ${
+                className={`w-full h-full object-cover transition-transform duration-300 ${
                   imgLoaded ? 'opacity-100' : 'opacity-0'
                 }`}
               />
             )}
-            <div className="overlay">
-              <span>{displayName.toUpperCase()}</span>
-            </div>
           </>
         ) : (
           <div className="placeholder" style={{ backgroundImage: `url(${getPlaceholderSvg(domain)})` }} />
         )}
       </div>
 
-      <div className="details">
+      <div className="card-meta">
         <img
           src={faviconUrl}
           alt=""
-          className="favicon"
+          className="card-favicon"
           loading="lazy"
           onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
         />
-        <span className="domain-name">{domain}</span>
-        {dateAdded && <time className="date" dateTime={dateAdded}>{dateAdded}</time>}
-        <a
-          href={cleanUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="external-link"
-          aria-label={`Visit ${domain}`}
-        >
-          <ExternalLink size={12} strokeWidth={2} />
-        </a>
+        <span className="card-name">{displayName}</span>
       </div>
     </article>
   )

@@ -2,6 +2,7 @@ export interface SiteEntry {
   domain: string
   url: string
   dateAdded: string
+  name?: string
 }
 
 function parseCSVLine(line: string): string[] {

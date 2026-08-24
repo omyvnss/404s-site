@@ -35,19 +35,19 @@ export function ArchiveModal({ sites, isOpen, onClose }: ArchiveModalProps) {
       <div className="modal-overlay" onClick={onClose} />
       <div className="modal" role="dialog" aria-modal="true" aria-label="All 404 page links">
         <div className="modal-header">
-          <h2>All Links</h2>
+          <h2 className="modal-title">All Links</h2>
           <button
             onClick={onClose}
             className="modal-close"
             aria-label="Close modal"
           >
-            <svg viewBox="0 0 20 20" fill="none">
-              <path d="M5 5L15 15M15 5L5 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+              <path d="M5 5L15 15M15 5L5 15" />
             </svg>
           </button>
         </div>
         <div className="modal-body">
-          <p style={{ fontSize: 'var(--font-xsm)', color: 'var(--color-foreground-subtler)', marginBottom: '16px', fontFamily: 'var(--font-mono)' }}>
+          <p style={{ fontSize: 'var(--font-xs)', color: 'var(--color-text-subtle)', marginBottom: '16px', fontFamily: 'var(--font-mono)' }}>
             {sites.length} 404 pages archived
           </p>
           <div className="modal-list">
@@ -61,13 +61,13 @@ export function ArchiveModal({ sites, isOpen, onClose }: ArchiveModalProps) {
                   rel="noopener noreferrer"
                   className="modal-item"
                 >
-                  <div className="info">
-                    <span className="domain">{site.domain}</span>
+                  <div className="modal-item-info">
+                    <span className="modal-item-name">{site.domain}</span>
                     {site.dateAdded && (
-                      <span className="date">{site.dateAdded}</span>
+                      <span className="modal-item-date">{site.dateAdded}</span>
                     )}
                   </div>
-                  <ExternalLink size={16} className="external-icon" />
+                  <ExternalLink size={18} className="modal-item-icon" />
                 </a>
               )
             })}
