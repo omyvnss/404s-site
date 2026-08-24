@@ -57,7 +57,7 @@ export default function App() {
           <ErrorState message={error} onRetry={refetch} />
         )}
 
-        {!error && <CardGrid sites={sites} loading={loading} />}
+        {!error && <CardGrid loading={loading} />}
       </main>
 
       <ArchiveModal
