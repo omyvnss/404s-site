@@ -4,7 +4,7 @@ import { defineConfig } from 'vite'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  base: '/404s-site/',
+  base: '/',
   build: {
     minify: 'esbuild',
     cssCodeSplit: true,
