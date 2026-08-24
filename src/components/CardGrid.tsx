@@ -1,5 +1,4 @@
 import { Card } from './Card'
-import { SkeletonCard } from './SkeletonCard'
 import type { SiteEntry } from '../lib/csv'
 
 interface CardGridProps {
@@ -10,9 +9,14 @@ interface CardGridProps {
 export function CardGrid({ sites, loading }: CardGridProps) {
   if (loading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="skeleton-grid">
         {Array.from({ length: 9 }).map((_, i) => (
-          <SkeletonCard key={i} />
+          <div key={i} className="skeleton-card">
+            <div className="image" />
+            <div className="details">
+              <div className="line" />
+            </div>
+          </div>
         ))}
       </div>
     )
@@ -21,14 +25,14 @@ export function CardGrid({ sites, loading }: CardGridProps) {
   if (sites.length === 0) return null
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {sites.map((site, i) => (
+    <div className="websites archive">
+      {sites.map((site, index) => (
         <Card
           key={site.url}
           domain={site.domain}
           url={site.url}
           dateAdded={site.dateAdded}
-          index={i}
+          index={index}
         />
       ))}
     </div>

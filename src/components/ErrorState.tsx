@@ -1,5 +1,3 @@
-import { AlertTriangle } from 'lucide-react'
-
 interface ErrorStateProps {
   message: string
   onRetry: () => void
@@ -7,20 +5,15 @@ interface ErrorStateProps {
 
 export function ErrorState({ message, onRetry }: ErrorStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center py-24 px-6 text-center">
-      <div className="w-12 h-12 rounded-full bg-surface border border-border flex items-center justify-center mb-5">
-        <AlertTriangle size={20} className="text-text-muted" />
-      </div>
-      <h2 className="text-lg font-bold text-text mb-2">
-        Something went wrong
-      </h2>
-      <p className="text-sm text-text-muted max-w-sm mb-6">
-        {message}
-      </p>
-      <button
-        onClick={onRetry}
-        className="px-5 py-2.5 rounded-full bg-surface border border-border text-sm font-semibold text-text hover:border-border-hover hover:bg-surface-hover transition-all"
-      >
+    <div className="error-state">
+      <svg className="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <circle cx="12" cy="12" r="10" />
+        <line x1="12" y1="8" x2="12" y2="12" />
+        <line x1="12" y1="16" x2="12.01" y2="16" />
+      </svg>
+      <h2>Something went wrong</h2>
+      <p>{message}</p>
+      <button onClick={onRetry} className="retry-btn">
         Try again
       </button>
     </div>
