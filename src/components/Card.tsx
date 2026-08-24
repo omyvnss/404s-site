@@ -1,6 +1,6 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { ExternalLink } from 'lucide-react'
-import { getScreenshotUrl, extractCleanUrl } from '../lib/screenshots'
+import { getScreenshotProviders, getFaviconUrl, getPlaceholderSvg, extractDomain } from '../lib/screenshots'
 
 interface CardProps {
   domain: string
@@ -9,67 +9,98 @@ interface CardProps {
   index: number
 }
 
-export function Card({ domain, url }: CardProps) {
+export function Card({ domain, url, dateAdded, index }: CardProps) {
+  const [imgSrc, setImgSrc] = useState<string | null>(null)
   const [imgError, setImgError] = useState(false)
   const [imgLoaded, setImgLoaded] = useState(false)
+  const [providerIndex, setProviderIndex] = useState(0)
 
-  const cleanUrl = extractCleanUrl(url)
-  const screenshotUrl = getScreenshotUrl(cleanUrl)
+  const cleanUrl = url.replace(/\?via=404sdesign/g, '').trim()
+  const providers = getScreenshotProviders(cleanUrl)
+  const faviconUrl = getFaviconUrl(cleanUrl)
+  const displayName = extractDomain(domain)
 
-  const handleError = useCallback(() => {
-    setImgError(true)
-  }, [])
+  const tryNextProvider = useCallback(() => {
+    if (providerIndex < providers.length - 1) {
+      setProviderIndex(prev => prev + 1)
+      setImgError(false)
+      setImgLoaded(false)
+    } else {
+      setImgError(true)
+    }
+  }, [providerIndex, providers.length])
+
+  useEffect(() => {
+    if (!imgError && providerIndex < providers.length) {
+      const providerUrl = providers[providerIndex]
+      const img = new Image()
+      img.onload = () => {
+        setImgSrc(providerUrl)
+        setImgLoaded(true)
+        setImgError(false)
+      }
+      img.onerror = () => {
+        tryNextProvider()
+      }
+      img.src = providerUrl
+    }
+  }, [providerIndex, providers, imgError, tryNextProvider])
 
   const handleLoad = useCallback(() => {
     setImgLoaded(true)
   }, [])
 
-  const displayName = domain.replace(/^www\./, '').split('.')[0]
+  const handleError = useCallback(() => {
+    tryNextProvider()
+  }, [tryNextProvider])
+
+  const delay = Math.min(index * 20, 200)
 
   return (
-    <article className="website">
-      {/* Screenshot container */}
+    <article className="website" style={{ animationDelay: `${delay}ms` }}>
       <div className="image">
         {!imgError ? (
           <>
             {!imgLoaded && (
-              <div className="absolute inset-0 bg-neutral-100 animate-pulse" />
+              <div className="placeholder" style={{ backgroundImage: `url(${getPlaceholderSvg(domain)})` }} />
             )}
-            <img
-              src={screenshotUrl}
-              alt={`${domain} 404 page screenshot`}
-              loading="lazy"
-              decoding="async"
-              onLoad={handleLoad}
-              onError={handleError}
-              className={`w-full aspect-square object-cover transition-opacity duration-300 ${
-                imgLoaded ? 'opacity-100' : 'opacity-0'
-              }`}
-            />
-            {/* Hover overlay */}
+            {imgSrc && (
+              <img
+                src={imgSrc}
+                alt={`${domain} 404 page screenshot`}
+                loading="lazy"
+                decoding="async"
+                onLoad={handleLoad}
+                onError={handleError}
+                className={`w-full aspect-square object-cover transition-opacity duration-200 ${
+                  imgLoaded ? 'opacity-100' : 'opacity-0'
+                }`}
+              />
+            )}
             <div className="overlay">
               <span>{displayName.toUpperCase()}</span>
             </div>
           </>
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center bg-neutral-100">
-            <div className="text-center px-4">
-              <div className="text-3xl font-bold text-neutral-400 mb-2">404</div>
-              <div className="text-sm text-neutral-500 font-medium truncate max-w-[180px]">
-                {domain}
-              </div>
-            </div>
-          </div>
+          <div className="placeholder" style={{ backgroundImage: `url(${getPlaceholderSvg(domain)})` }} />
         )}
       </div>
 
-      {/* Details row */}
       <div className="details">
+        <img
+          src={faviconUrl}
+          alt=""
+          className="favicon"
+          loading="lazy"
+          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+        />
+        <span className="domain-name">{domain}</span>
+        {dateAdded && <time className="date" dateTime={dateAdded}>{dateAdded}</time>}
         <a
           href={cleanUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="link"
+          className="external-link"
           aria-label={`Visit ${domain}`}
         >
           <ExternalLink size={12} strokeWidth={2} />

@@ -246,23 +246,70 @@ body {
 .website .image:hover .overlay { opacity: 1; }
 .website .image:hover .overlay span { transform: scale(1); }
 
+/* Placeholder for images */
+.website .image .placeholder {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  border-radius: 12px;
+}
+
 /* Details row */
 .website .details {
   display: flex;
-  column-gap: 8px;
   align-items: center;
-  justify-content: flex-end;
+  gap: 10px;
   margin-top: 12px;
-  font-size: var(--font-sm);
+  padding: 0 2px;
 }
-.website .details .link {
+
+.website .details .favicon {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  background: var(--color-neutral-100);
+}
+
+.website .details .domain-name {
   font-family: var(--font-mono);
-  font-size: var(--font-xsm);
-  color: var(--color-foreground-subtle);
-  text-decoration: none;
-  transition: color 0.2s;
+  font-size: var(--font-sm);
+  font-weight: 500;
+  color: var(--color-foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
 }
-.website .details .link:hover { color: var(--color-foreground); }
+
+.website .details .date {
+  font-family: var(--font-mono);
+  font-size: var(--font-2xsm);
+  color: var(--color-foreground-subtler);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.website .details .external-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  color: var(--color-foreground-subtle);
+  background: var(--color-neutral-100);
+  border: 1px solid var(--color-neutral-200);
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.website .details .external-link:hover {
+  color: var(--color-foreground);
+  background: var(--color-neutral-200);
+  border-color: var(--color-neutral-300);
+}
 
 /* Footer */
 .footer {
@@ -326,17 +373,44 @@ body {
   border-radius: 12px;
 }
 .skeleton-card .details {
-  margin-top: 12px;
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 0 2px;
 }
-.skeleton-card .details .line {
-  height: var(--font-xsm);
-  width: 60px;
+.skeleton-card .details .favicon {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--color-neutral-100) 25%, var(--color-neutral-200) 50%, var(--color-neutral-100) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+.skeleton-card .details .domain {
+  flex: 1;
+  height: var(--font-sm);
+  min-width: 0;
   background: linear-gradient(90deg, var(--color-neutral-100) 25%, var(--color-neutral-200) 50%, var(--color-neutral-100) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: 2px;
+}
+.skeleton-card .details .date {
+  width: 80px;
+  height: var(--font-2xsm);
+  background: linear-gradient(90deg, var(--color-neutral-100) 25%, var(--color-neutral-200) 50%, var(--color-neutral-100) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 2px;
+}
+.skeleton-card .details .external {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--color-neutral-100) 25%, var(--color-neutral-200) 50%, var(--color-neutral-100) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
 }
 
 @keyframes shimmer {

@@ -14,7 +14,10 @@ export function CardGrid({ sites, loading }: CardGridProps) {
           <div key={i} className="skeleton-card">
             <div className="image" />
             <div className="details">
-              <div className="line" />
+              <div className="favicon" />
+              <div className="domain" />
+              <div className="date" />
+              <div className="external" />
             </div>
           </div>
         ))}
