@@ -1,12 +1,9 @@
-import { SlidersHorizontal } from 'lucide-react'
-
 interface HeroProps {
   onGridClick?: () => void
   onSurpriseMe?: () => void
-  onFilterClick?: () => void
 }
 
-export function Hero({ onGridClick, onSurpriseMe, onFilterClick }: HeroProps) {
+export function Hero({ onGridClick, onSurpriseMe }: HeroProps) {
   return (
     <>
       <section className="hero container-page" aria-labelledby="hero-heading">
@@ -39,14 +36,6 @@ export function Hero({ onGridClick, onSurpriseMe, onFilterClick }: HeroProps) {
               SURPRISE ME [S]
             </button>
           </div>
-          <button
-            className="filter-btn"
-            onClick={onFilterClick}
-            aria-label="Filter"
-            aria-expanded="false"
-          >
-            <SlidersHorizontal strokeWidth={1.5} />
-          </button>
         </div>
       </section>
     </>

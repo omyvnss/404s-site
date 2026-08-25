@@ -1,9 +1,11 @@
 import { useState, useCallback, useEffect } from 'react'
+import { Routes, Route } from 'react-router-dom'
 import { Header } from './components/Header'
 import { Hero } from './components/Hero'
 import { CardGrid } from './components/CardGrid'
 import { ArchiveModal } from './components/ArchiveModal'
 import { ErrorState } from './components/ErrorState'
+import { About } from './components/About'
 import { useCsvData } from './hooks/useCsvData'
 
 export default function App() {
@@ -23,7 +25,7 @@ export default function App() {
   }, [sites])
 
   const handleFilter = useCallback(() => {
-    // Filter modal would go here
+    setArchiveOpen(true)
   }, [])
 
   // Keyboard shortcuts
@@ -44,22 +46,31 @@ export default function App() {
 
   return (
     <div className="min-h-screen">
-      <Header />
+      <Header onFilterClick={handleFilter} />
 
-      <Hero
-        onGridClick={handleGrid}
-        onSurpriseMe={handleSurpriseMe}
-        onFilterClick={handleFilter}
-      />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <Hero
+                onGridClick={handleGrid}
+                onSurpriseMe={handleSurpriseMe}
+              />
 
-      <main className="container-page">
-        {error && !loading && (
-          <ErrorState message={error} onRetry={refetch} />
-        )}
+              <main className="container-page">
+                {error && !loading && (
+                  <ErrorState message={error} onRetry={refetch} />
+                )}
 
-        {!error && <CardGrid sites={sites} loading={loading} />}
-        <div className="gallery-footer-space" aria-hidden="true" />
-      </main>
+                {!error && <CardGrid sites={sites} loading={loading} />}
+                <div className="gallery-footer-space" aria-hidden="true" />
+              </main>
+            </>
+          }
+        />
+        <Route path="/about" element={<About />} />
+      </Routes>
 
       <ArchiveModal
         sites={sites}
