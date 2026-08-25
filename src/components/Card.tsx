@@ -6,16 +6,20 @@ interface CardProps {
   url: string
 }
 
-const TIMEOUT_MS = 8000
+const TIMEOUT_MS = 3000
+
+const providerCache = new Map<string, string | null>()
 
 export function Card({ domain, url }: CardProps) {
-  const [imgSrc, setImgSrc] = useState<string | null>(null)
-  const [imgError, setImgError] = useState(false)
-  const [imgLoaded, setImgLoaded] = useState(false)
+  const [imgSrc, setImgSrc] = useState<string | null>(() => {
+    const clean = extractCleanUrl(url).replace(/\?via=404sdesign/g, '')
+    return providerCache.get(clean) ?? null
+  })
+  const [imgLoaded, setImgLoaded] = useState(!!providerCache.get(extractCleanUrl(url).replace(/\?via=404sdesign/g, '')))
+  const [imgFailed, setImgFailed] = useState(false)
   const [inView, setInView] = useState(false)
   const [providerIndex, setProviderIndex] = useState(0)
   const cardRef = useRef<HTMLDivElement>(null)
-  const abortRef = useRef<AbortController | null>(null)
 
   const cleanUrl = extractCleanUrl(url)
   const faviconUrl = getFaviconUrl(cleanUrl)
@@ -34,23 +38,27 @@ export function Card({ domain, url }: CardProps) {
           observer.disconnect()
         }
       },
-      { rootMargin: '300px' }
+      { rootMargin: '100px' }
     )
     observer.observe(el)
     return () => observer.disconnect()
   }, [inView])
 
   useEffect(() => {
-    if (!inView || imgSrc || imgError || providerIndex >= providers.length) return
+    if (!inView || imgSrc || imgFailed || providerIndex >= providers.length) return
 
     const providerUrl = providers[providerIndex]
     const controller = new AbortController()
-    abortRef.current = controller
-    const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS)
+    const timeoutId = setTimeout(() => {
+      controller.abort()
+      setProviderIndex(prev => prev + 1)
+    }, TIMEOUT_MS)
 
     const img = new Image()
     img.onload = () => {
       if (!controller.signal.aborted) {
+        clearTimeout(timeoutId)
+        providerCache.set(extractCleanUrl(url).replace(/\?via=404sdesign/g, ''), providerUrl)
         setImgSrc(providerUrl)
         setImgLoaded(true)
       }
@@ -68,17 +76,14 @@ export function Card({ domain, url }: CardProps) {
       clearTimeout(timeoutId)
       controller.abort()
     }
-  }, [inView, imgSrc, imgError, providerIndex, providers])
+  }, [inView, imgSrc, imgFailed, providerIndex, providers, url])
 
   useEffect(() => {
     if (providerIndex >= providers.length && !imgSrc) {
-      setImgError(true)
+      providerCache.set(extractCleanUrl(url).replace(/\?via=404sdesign/g, ''), null)
+      setImgFailed(true)
     }
-  }, [providerIndex, providers.length, imgSrc])
-
-  useEffect(() => {
-    return () => { abortRef.current?.abort() }
-  }, [])
+  }, [providerIndex, providers.length, imgSrc, url])
 
   const firstLetter = displayName.charAt(0).toUpperCase()
 
@@ -86,7 +91,7 @@ export function Card({ domain, url }: CardProps) {
     <article className="card" ref={cardRef}>
       <a href={cleanUrl} target="_blank" rel="noopener noreferrer" className="card-link">
         <div className="card-image">
-          {!imgSrc && !imgError && (
+          {!imgSrc && !imgFailed && (
             <div className="card-placeholder">
               <span className="card-placeholder-letter">{firstLetter}</span>
             </div>
@@ -99,10 +104,10 @@ export function Card({ domain, url }: CardProps) {
               decoding="async"
               onLoad={() => setImgLoaded(true)}
               onError={() => setProviderIndex(prev => prev + 1)}
-              style={{ opacity: imgLoaded ? 1 : 0, transition: 'opacity 0.3s' }}
+              style={{ opacity: imgLoaded ? 1 : 0, transition: 'opacity 0.2s' }}
             />
           )}
-          {imgError && (
+          {imgFailed && (
             <div className="card-placeholder card-placeholder-error">
               <span className="card-placeholder-letter">{firstLetter}</span>
             </div>

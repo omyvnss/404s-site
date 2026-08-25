@@ -42,7 +42,15 @@ export function useCsvData(): UseCsvDataResult {
         throw new Error('No entries found in the spreadsheet.')
       }
 
-      setSites(parsed)
+      const seen = new Set<string>()
+      const deduped = parsed.filter(entry => {
+        const clean = entry.url.replace(/\?via=404sdesign/g, '').replace(/&via=404sdesign/g, '').toLowerCase()
+        if (seen.has(clean)) return false
+        seen.add(clean)
+        return true
+      })
+
+      setSites(deduped)
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Unknown error occurred'
       setError(message)

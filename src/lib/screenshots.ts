@@ -1,5 +1,5 @@
 export function extractCleanUrl(url: string): string {
-  return url.replace(/\?via=404sdesign/g, '').trim()
+  return url.replace(/\?via=404sdesign/g, '').replace(/&via=404sdesign/g, '').trim()
 }
 
 export function extractDomain(url: string): string {
@@ -12,46 +12,59 @@ export function extractDomain(url: string): string {
   }
 }
 
+const screenshotCache = new Map<string, string | null>()
+
 export function getScreenshotProviders(url: string): string[] {
   const cleanUrl = extractCleanUrl(url)
   const encodedUrl = encodeURIComponent(cleanUrl)
-  
+
   return [
-    `https://api.microlink.io/?url=${encodedUrl}&screenshot=true&meta=false&embed=screenshot.url&waitFor=networkidle0&timeout=10000`,
+    `https://image.thum.io/get/width/480/crop/320/noanimate/${cleanUrl}`,
+    `https://api.microlink.io/?url=${encodedUrl}&screenshot=true&meta=false&embed=screenshot.url&waitFor=domcontentloaded&timeout=5000`,
     `https://r.jina.ai/http://${cleanUrl}`,
-    `https://image.thum.io/get/width/1200/crop/800/${cleanUrl}`,
   ]
 }
 
-export async function fetchScreenshotWithFallback(url: string, timeoutMs = 8000): Promise<string | null> {
-  const providers = getScreenshotProviders(url)
-  
+export async function fetchScreenshotWithFallback(url: string, timeoutMs = 3000): Promise<string | null> {
+  const cleanUrl = extractCleanUrl(url)
+  if (screenshotCache.has(cleanUrl)) {
+    return screenshotCache.get(cleanUrl) ?? null
+  }
+
+  const providers = getScreenshotProviders(cleanUrl)
+
   for (const provider of providers) {
     try {
       const controller = new AbortController()
       const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
-      
-      const res = await fetch(provider, { 
+
+      const res = await fetch(provider, {
         signal: controller.signal,
         headers: { 'Accept': 'image/*,application/json,*/*' }
       })
       clearTimeout(timeoutId)
-      
+
       if (res.ok) {
         const contentType = res.headers.get('content-type') || ''
         if (contentType.includes('image')) {
+          screenshotCache.set(cleanUrl, provider)
           return provider
         }
         if (contentType.includes('json')) {
           const data = await res.json()
-          if (data?.screenshot?.url) return data.screenshot.url
-          if (data?.url) return data.url
+          const imgUrl = data?.screenshot?.url || data?.url || null
+          if (imgUrl) {
+            screenshotCache.set(cleanUrl, imgUrl)
+            return imgUrl
+          }
         }
       }
     } catch {
       continue
     }
   }
+
+  screenshotCache.set(cleanUrl, null)
   return null
 }
 
@@ -63,9 +76,9 @@ export function getFaviconUrl(url: string): string {
 export function getPlaceholderSvg(domain: string): string {
   const name = domain.replace(/^www\./, '').split('.')[0].toUpperCase()
   return `data:image/svg+xml,${encodeURIComponent(`
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" style="background:#18181b">
-      <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" 
-            font-family="system-ui, sans-serif" font-size="48" font-weight="600" fill="#52525b">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 320" style="background:#141414">
+      <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+            font-family="system-ui, sans-serif" font-size="36" font-weight="500" fill="#262626">
         ${name}
       </text>
     </svg>
