@@ -43,21 +43,22 @@ export default function App() {
   }, [handleGrid, handleSurpriseMe])
 
   return (
-    <div className="min-h-screen bg-bg">
+    <div className="min-h-screen">
       <Header />
-      
+
       <Hero
         onGridClick={handleGrid}
         onSurpriseMe={handleSurpriseMe}
         onFilterClick={handleFilter}
       />
 
-      <main className="gallery">
+      <main className="container-page">
         {error && !loading && (
           <ErrorState message={error} onRetry={refetch} />
         )}
 
         {!error && <CardGrid loading={loading} />}
+        <div className="gallery-footer-space" aria-hidden="true" />
       </main>
 
       <ArchiveModal
