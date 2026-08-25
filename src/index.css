@@ -329,7 +329,7 @@ body {
   display: block;
   text-decoration: none;
   color: inherit;
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 16 / 9;
   border-radius: 8px;
   overflow: hidden;
 }
@@ -429,7 +429,7 @@ body {
 }
 
 .skeleton-image {
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 16 / 9;
   border-radius: 8px;
   background: linear-gradient(90deg, var(--color-surface) 25%, #1a1a1a 50%, var(--color-surface) 75%);
   background-size: 200% 100%;
