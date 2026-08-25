@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Redirecting...</title>
+    <script>
+      // SPA fallback for GitHub Pages
+      // Redirects /about to /?path=/about so React Router can handle it
+      var path = window.location.pathname + window.location.search;
+      var redirect = '/index.html?path=' + encodeURIComponent(path);
+      window.location.replace(redirect);
+    </script>
+  </head>
+  <body>
+    Redirecting to home...
+  </body>
+</html>
