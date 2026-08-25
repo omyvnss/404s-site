@@ -1,64 +1,66 @@
-import { useState, useCallback, useEffect } from 'react'
-import { getScreenshotProviders, getFaviconUrl, getPlaceholderSvg } from '../lib/screenshots'
+import { useState, useCallback, useRef, useEffect } from 'react'
+import { getFaviconUrl, getPlaceholderSvg, extractCleanUrl } from '../lib/screenshots'
 
 interface CardProps {
   domain: string
   url: string
-  dateAdded: string
-  index: number
-  name?: string
 }
 
-export function Card({ domain, url, index, name }: CardProps) {
+const SCREENSHOT_SERVICE = 'https://image.thum.io/get/width/960/crop/640/noanimate/'
+
+export function Card({ domain, url }: CardProps) {
   const [imgSrc, setImgSrc] = useState<string | null>(null)
   const [imgError, setImgError] = useState(false)
   const [imgLoaded, setImgLoaded] = useState(false)
-  const [providerIndex, setProviderIndex] = useState(0)
+  const [inView, setInView] = useState(false)
+  const cardRef = useRef<HTMLDivElement>(null)
 
-  const cleanUrl = url.replace(/\?via=404sdesign/g, '').trim()
-  const providers = getScreenshotProviders(cleanUrl)
+  const cleanUrl = extractCleanUrl(url)
   const faviconUrl = getFaviconUrl(cleanUrl)
-  const displayName = name || domain
+  const displayName = domain.replace(/^www\./, '').split('.')[0]
 
-  const tryNextProvider = useCallback(() => {
-    if (providerIndex < providers.length - 1) {
-      setProviderIndex(prev => prev + 1)
-      setImgError(false)
-      setImgLoaded(false)
-    } else {
+  // IntersectionObserver: only load screenshot when card enters viewport
+  useEffect(() => {
+    if (inView) return
+    const el = cardRef.current
+    if (!el) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true)
+          observer.disconnect()
+        }
+      },
+      { rootMargin: '200px' }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [inView])
+
+  // Fetch screenshot only when in view
+  useEffect(() => {
+    if (!inView || imgSrc || imgError) return
+
+    const screenshotUrl = `${SCREENSHOT_SERVICE}${encodeURIComponent(cleanUrl)}`
+    const img = new Image()
+    img.onload = () => {
+      setImgSrc(screenshotUrl)
+      setImgLoaded(true)
+    }
+    img.onerror = () => {
       setImgError(true)
     }
-  }, [providerIndex, providers.length])
-
-  useEffect(() => {
-    if (!imgError && providerIndex < providers.length) {
-      const providerUrl = providers[providerIndex]
-      const img = new Image()
-      img.onload = () => {
-        setImgSrc(providerUrl)
-        setImgLoaded(true)
-        setImgError(false)
-      }
-      img.onerror = () => {
-        tryNextProvider()
-      }
-      img.src = providerUrl
-    }
-  }, [providerIndex, providers, imgError, tryNextProvider])
-
-  const handleLoad = useCallback(() => {
-    setImgLoaded(true)
-  }, [])
+    img.src = screenshotUrl
+  }, [inView, imgSrc, imgError, cleanUrl])
 
   const handleError = useCallback(() => {
-    tryNextProvider()
-  }, [tryNextProvider])
-
-  const delay = Math.min(index * 20, 200)
+    setImgError(true)
+  }, [])
 
   return (
-    <article className="card" style={{ animationDelay: `${delay}ms` }}>
-      <a href={cleanUrl} target="_blank" rel="noopener noreferrer" className="card-link" aria-label={`View ${displayName} 404 page`}>
+    <article className="card" ref={cardRef}>
+      <a href={cleanUrl} target="_blank" rel="noopener noreferrer" className="card-link">
         <div className="card-image">
           {!imgError ? (
             <>
@@ -68,14 +70,13 @@ export function Card({ domain, url, index, name }: CardProps) {
               {imgSrc && (
                 <img
                   src={imgSrc}
-                  alt={`${displayName} 404 page screenshot`}
+                  alt={`${displayName} 404 page`}
                   loading="lazy"
                   decoding="async"
-                  onLoad={handleLoad}
+                  onLoad={() => setImgLoaded(true)}
                   onError={handleError}
-                  className={`w-full h-full object-contain transition-opacity duration-200 ${
-                    imgLoaded ? 'opacity-100' : 'opacity-0'
-                  }`}
+                  className={imgLoaded ? 'opacity-100' : 'opacity-0'}
+                  style={{ transition: 'opacity 0.2s' }}
                 />
               )}
             </>
@@ -91,6 +92,7 @@ export function Card({ domain, url, index, name }: CardProps) {
           alt=""
           className="card-favicon"
           loading="lazy"
+          decoding="async"
           onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
         />
         <span className="card-name">{displayName}</span>

@@ -57,7 +57,7 @@ export default function App() {
           <ErrorState message={error} onRetry={refetch} />
         )}
 
-        {!error && <CardGrid loading={loading} />}
+        {!error && <CardGrid sites={sites} loading={loading} />}
         <div className="gallery-footer-space" aria-hidden="true" />
       </main>
 

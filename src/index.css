@@ -287,6 +287,8 @@ body {
 /* ============ CARD ============ */
 .card {
   width: 100%;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 240px;
 }
 
 .card-link {
@@ -310,6 +312,14 @@ body {
   object-fit: cover;
   transform-origin: center;
   transition: transform 0.25s ease;
+}
+
+.placeholder {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
 }
 
 .card-link:hover .card-image img {

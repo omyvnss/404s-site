@@ -22,7 +22,7 @@ export function useCsvData(): UseCsvDataResult {
 
     try {
       const res = await fetch(SHEET_CSV_URL, {
-        cache: 'no-store',
+        cache: 'force-cache',
         headers: { 'Accept': 'text/csv,text/plain,*/*' },
       })
 
