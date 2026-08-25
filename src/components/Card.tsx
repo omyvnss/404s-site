@@ -1,25 +1,27 @@
-import { useState, useCallback, useRef, useEffect } from 'react'
-import { getFaviconUrl, getPlaceholderSvg, extractCleanUrl } from '../lib/screenshots'
+import { useState, useRef, useEffect } from 'react'
+import { getScreenshotProviders, getFaviconUrl, extractCleanUrl } from '../lib/screenshots'
 
 interface CardProps {
   domain: string
   url: string
 }
 
-const SCREENSHOT_SERVICE = 'https://image.thum.io/get/width/960/crop/640/noanimate/'
+const TIMEOUT_MS = 8000
 
 export function Card({ domain, url }: CardProps) {
   const [imgSrc, setImgSrc] = useState<string | null>(null)
   const [imgError, setImgError] = useState(false)
   const [imgLoaded, setImgLoaded] = useState(false)
   const [inView, setInView] = useState(false)
+  const [providerIndex, setProviderIndex] = useState(0)
   const cardRef = useRef<HTMLDivElement>(null)
+  const abortRef = useRef<AbortController | null>(null)
 
   const cleanUrl = extractCleanUrl(url)
   const faviconUrl = getFaviconUrl(cleanUrl)
   const displayName = domain.replace(/^www\./, '').split('.')[0]
+  const providers = getScreenshotProviders(cleanUrl)
 
-  // IntersectionObserver: only load screenshot when card enters viewport
   useEffect(() => {
     if (inView) return
     const el = cardRef.current
@@ -32,56 +34,78 @@ export function Card({ domain, url }: CardProps) {
           observer.disconnect()
         }
       },
-      { rootMargin: '200px' }
+      { rootMargin: '300px' }
     )
     observer.observe(el)
     return () => observer.disconnect()
   }, [inView])
 
-  // Fetch screenshot only when in view
   useEffect(() => {
-    if (!inView || imgSrc || imgError) return
+    if (!inView || imgSrc || imgError || providerIndex >= providers.length) return
 
-    const screenshotUrl = `${SCREENSHOT_SERVICE}${encodeURIComponent(cleanUrl)}`
+    const providerUrl = providers[providerIndex]
+    const controller = new AbortController()
+    abortRef.current = controller
+    const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS)
+
     const img = new Image()
     img.onload = () => {
-      setImgSrc(screenshotUrl)
-      setImgLoaded(true)
+      if (!controller.signal.aborted) {
+        setImgSrc(providerUrl)
+        setImgLoaded(true)
+      }
     }
     img.onerror = () => {
+      if (!controller.signal.aborted) {
+        clearTimeout(timeoutId)
+        setProviderIndex(prev => prev + 1)
+      }
+    }
+
+    img.src = providerUrl
+
+    return () => {
+      clearTimeout(timeoutId)
+      controller.abort()
+    }
+  }, [inView, imgSrc, imgError, providerIndex, providers])
+
+  useEffect(() => {
+    if (providerIndex >= providers.length && !imgSrc) {
       setImgError(true)
     }
-    img.src = screenshotUrl
-  }, [inView, imgSrc, imgError, cleanUrl])
+  }, [providerIndex, providers.length, imgSrc])
 
-  const handleError = useCallback(() => {
-    setImgError(true)
+  useEffect(() => {
+    return () => { abortRef.current?.abort() }
   }, [])
+
+  const firstLetter = displayName.charAt(0).toUpperCase()
 
   return (
     <article className="card" ref={cardRef}>
       <a href={cleanUrl} target="_blank" rel="noopener noreferrer" className="card-link">
         <div className="card-image">
-          {!imgError ? (
-            <>
-              {!imgLoaded && (
-                <div className="placeholder" style={{ backgroundImage: `url(${getPlaceholderSvg(domain)})` }} />
-              )}
-              {imgSrc && (
-                <img
-                  src={imgSrc}
-                  alt={`${displayName} 404 page`}
-                  loading="lazy"
-                  decoding="async"
-                  onLoad={() => setImgLoaded(true)}
-                  onError={handleError}
-                  className={imgLoaded ? 'opacity-100' : 'opacity-0'}
-                  style={{ transition: 'opacity 0.2s' }}
-                />
-              )}
-            </>
-          ) : (
-            <div className="placeholder" style={{ backgroundImage: `url(${getPlaceholderSvg(domain)})` }} />
+          {!imgSrc && !imgError && (
+            <div className="card-placeholder">
+              <span className="card-placeholder-letter">{firstLetter}</span>
+            </div>
+          )}
+          {imgSrc && (
+            <img
+              src={imgSrc}
+              alt={`${displayName} 404 page`}
+              loading="lazy"
+              decoding="async"
+              onLoad={() => setImgLoaded(true)}
+              onError={() => setProviderIndex(prev => prev + 1)}
+              style={{ opacity: imgLoaded ? 1 : 0, transition: 'opacity 0.3s' }}
+            />
+          )}
+          {imgError && (
+            <div className="card-placeholder card-placeholder-error">
+              <span className="card-placeholder-letter">{firstLetter}</span>
+            </div>
           )}
         </div>
       </a>
