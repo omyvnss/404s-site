@@ -1,0 +1,113 @@
+name: Screenshots
+
+on:
+  schedule:
+    # Every Sunday at 02:00 UTC
+    - cron: '0 2 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  generate-screenshots:
+    name: Generate previews
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Generate screenshots
+        run: npm run generate:screenshots
+
+      - name: Commit updated previews
+        id: commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/previews/ screenshot-report.json
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No preview changes — skipping commit"
+          else
+            git commit -m "chore(previews): regenerate site screenshots"
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Job summary
+        if: always()
+        run: |
+          if [ -f screenshot-report.json ]; then
+            jq -r '"## Screenshot Report\n\n| Metric | Count |\n|---|---|\n| Processed | \(.total) |\n| Generated | \(.generated) |\n| Updated | \(.updated) |\n| New | \(.new) |\n| Kept previous (failed) | \(.failedKept) |\n| Cloudflare rejected | \(.cloudflare) |\n| Timeouts | \(.timeout) |\n| Other errors | \(.otherErrors) |"' \
+              screenshot-report.json >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "No report produced" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshot-report
+          path: screenshot-report.json
+          retention-days: 30
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: generate-screenshots
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Write CNAME
+        run: echo "404s.vaultnco.store" > dist/CNAME
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

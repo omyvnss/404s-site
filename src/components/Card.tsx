@@ -1,30 +1,32 @@
 import { useState, useRef, useEffect } from 'react'
-import { getScreenshotProviders, getFaviconUrl, extractCleanUrl } from '../lib/screenshots'
+import { getFaviconUrl, extractCleanUrl } from '../lib/screenshots'
 
 interface CardProps {
   domain: string
   url: string
 }
 
-const TIMEOUT_MS = 3000
+const PREVIEW_BASE = '/previews/'
 
-const providerCache = new Map<string, string | null>()
+function generatePreviewFilename(url: string): string {
+  const clean = extractCleanUrl(url)
+  const domain = clean.replace(/^https?:\/\//i, '').replace(/\/+$/, '').split('/')[0].replace(/^www\./, '')
+  const safeDomain = domain.replace(/[^a-z0-9.-]/gi, '-').toLowerCase()
+  return `${safeDomain}.jpg`
+}
 
 export function Card({ domain, url }: CardProps) {
-  const [imgSrc, setImgSrc] = useState<string | null>(() => {
-    const clean = extractCleanUrl(url).replace(/\?via=404sdesign/g, '')
-    return providerCache.get(clean) ?? null
-  })
-  const [imgLoaded, setImgLoaded] = useState(!!providerCache.get(extractCleanUrl(url).replace(/\?via=404sdesign/g, '')))
+  const [imgSrc, setImgSrc] = useState<string | null>(null)
+  const [imgLoaded, setImgLoaded] = useState(false)
   const [imgFailed, setImgFailed] = useState(false)
   const [inView, setInView] = useState(false)
-  const [providerIndex, setProviderIndex] = useState(0)
   const cardRef = useRef<HTMLDivElement>(null)
 
   const cleanUrl = extractCleanUrl(url)
   const faviconUrl = getFaviconUrl(cleanUrl)
   const displayName = domain.replace(/^www\./, '').split('.')[0]
-  const providers = getScreenshotProviders(cleanUrl)
+  const previewFilename = generatePreviewFilename(url)
+  const previewUrl = `${PREVIEW_BASE}${previewFilename}`
 
   useEffect(() => {
     if (inView) return
@@ -45,45 +47,23 @@ export function Card({ domain, url }: CardProps) {
   }, [inView])
 
   useEffect(() => {
-    if (!inView || imgSrc || imgFailed || providerIndex >= providers.length) return
-
-    const providerUrl = providers[providerIndex]
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => {
-      controller.abort()
-      setProviderIndex(prev => prev + 1)
-    }, TIMEOUT_MS)
+    if (!inView || imgSrc || imgFailed) return
 
     const img = new Image()
     img.onload = () => {
-      if (!controller.signal.aborted) {
-        clearTimeout(timeoutId)
-        providerCache.set(extractCleanUrl(url).replace(/\?via=404sdesign/g, ''), providerUrl)
-        setImgSrc(providerUrl)
-        setImgLoaded(true)
-      }
+      setImgSrc(previewUrl)
+      setImgLoaded(true)
     }
     img.onerror = () => {
-      if (!controller.signal.aborted) {
-        clearTimeout(timeoutId)
-        setProviderIndex(prev => prev + 1)
-      }
-    }
-
-    img.src = providerUrl
-
-    return () => {
-      clearTimeout(timeoutId)
-      controller.abort()
-    }
-  }, [inView, imgSrc, imgFailed, providerIndex, providers, url])
-
-  useEffect(() => {
-    if (providerIndex >= providers.length && !imgSrc) {
-      providerCache.set(extractCleanUrl(url).replace(/\?via=404sdesign/g, ''), null)
       setImgFailed(true)
     }
-  }, [providerIndex, providers.length, imgSrc, url])
+    img.src = previewUrl
+
+    return () => {
+      img.onload = null
+      img.onerror = null
+    }
+  }, [inView, imgSrc, imgFailed, previewUrl])
 
   const firstLetter = displayName.charAt(0).toUpperCase()
 
@@ -103,7 +83,7 @@ export function Card({ domain, url }: CardProps) {
               loading="lazy"
               decoding="async"
               onLoad={() => setImgLoaded(true)}
-              onError={() => setProviderIndex(prev => prev + 1)}
+              onError={() => setImgFailed(true)}
               style={{ opacity: imgLoaded ? 1 : 0, transition: 'opacity 0.2s' }}
             />
           )}
