@@ -1,35 +1,28 @@
 {
-  "timestamp": "2026-08-30T08:05:48.380Z",
+  "timestamp": "2026-09-06T07:03:49.798Z",
   "total": 234,
   "plannedTotal": 234,
-  "generated": 219,
-  "updated": 219,
+  "generated": 217,
+  "updated": 217,
   "new": 0,
-  "failedKept": 7,
+  "failedKept": 9,
   "cloudflare": 2,
   "timeout": 4,
-  "otherErrors": 9,
+  "otherErrors": 11,
   "details": [
-    {
-      "domain": "3200kelvin.com",
-      "filename": "3200kelvin.com.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 135910
-    },
     {
       "domain": "21st-europe.com",
       "filename": "21st-europe.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 30592
+      "size": 29866
     },
     {
-      "domain": "accordion.net.au",
-      "filename": "accordion.net.au.jpg",
+      "domain": "3200kelvin.com",
+      "filename": "3200kelvin.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 42981
+      "size": 135559
     },
     {
       "domain": "acolorbright.com",
@@ -39,18 +32,25 @@
       "size": 14557
     },
     {
+      "domain": "accordion.net.au",
+      "filename": "accordion.net.au.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 42981
+    },
+    {
       "domain": "weareadopt.com",
       "filename": "weareadopt.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 7238
+      "size": 7240
     },
     {
       "domain": "247artists.com",
       "filename": "247artists.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 103209
+      "size": 109566
     },
     {
       "domain": "aino.agency",
@@ -85,49 +85,42 @@
       "filename": "ang-studio.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 31082
-    },
-    {
-      "domain": "adapptor.com.au",
-      "filename": "adapptor.com.au.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 13520
-    },
-    {
-      "domain": "fakeverything.com",
-      "filename": "fakeverything.com.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 333891
+      "size": 28063
     },
     {
       "domain": "antiaverage.studio",
       "filename": "antiaverage.studio.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 53113
+      "size": 15407
     },
     {
       "domain": "archi-malinstudio.com",
       "filename": "archi-malinstudio.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 53856
+      "size": 52222
     },
     {
-      "domain": "ariaprotocol.xyz",
-      "filename": "ariaprotocol.xyz.jpg",
+      "domain": "fakeverything.com",
+      "filename": "fakeverything.com.jpg",
+      "status": "timeout",
+      "previousExisted": true,
+      "reason": "page.screenshot: Timeout 20000ms exceeded."
+    },
+    {
+      "domain": "adapptor.com.au",
+      "filename": "adapptor.com.au.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 137053
+      "size": 13544
     },
     {
       "domain": "askphill.com",
       "filename": "askphill.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 47418
+      "size": 49644
     },
     {
       "domain": "artefakt.mov",
@@ -137,11 +130,11 @@
       "size": 7238
     },
     {
-      "domain": "atolldigital.com",
-      "filename": "atolldigital.com.jpg",
+      "domain": "attiq.design",
+      "filename": "attiq.design.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 32991
+      "size": 7238
     },
     {
       "domain": "baptisteglaymann.com",
@@ -151,11 +144,25 @@
       "size": 7240
     },
     {
+      "domain": "ariaprotocol.xyz",
+      "filename": "ariaprotocol.xyz.jpg",
+      "status": "timeout",
+      "previousExisted": true,
+      "reason": "page.screenshot: Timeout 20000ms exceeded."
+    },
+    {
+      "domain": "atolldigital.com",
+      "filename": "atolldigital.com.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 33304
+    },
+    {
       "domain": "bardeen.ai",
       "filename": "bardeen.ai.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 51882
+      "size": 18198
     },
     {
       "domain": "base.org",
@@ -165,46 +172,25 @@
       "size": 10161
     },
     {
-      "domain": "attiq.design",
-      "filename": "attiq.design.jpg",
+      "domain": "basicagency.com",
+      "filename": "basicagency.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 69519
+      "size": 123690
     },
     {
       "domain": "baqemono.jp",
       "filename": "baqemono.jp.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 9678
-    },
-    {
-      "domain": "basement.studio",
-      "filename": "basement.studio.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 19621
-    },
-    {
-      "domain": "basicagency.com",
-      "filename": "basicagency.com.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 124108
+      "size": 10615
     },
     {
       "domain": "bear-rabe.com",
       "filename": "bear-rabe.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 240899
-    },
-    {
-      "domain": "bennettandclive.com",
-      "filename": "bennettandclive.com.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 26617
+      "size": 241506
     },
     {
       "domain": "bedow.se",
@@ -218,7 +204,14 @@
       "filename": "bienvillecapital.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 31918
+      "size": 31970
+    },
+    {
+      "domain": "bennettandclive.com",
+      "filename": "bennettandclive.com.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 26617
     },
     {
       "domain": "bleibtgleich.com",
@@ -226,6 +219,13 @@
       "status": "success",
       "previousExisted": true,
       "size": 38768
+    },
+    {
+      "domain": "basement.studio",
+      "filename": "basement.studio.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 362148
     },
     {
       "domain": "bond-agency.com",
@@ -239,21 +239,14 @@
       "filename": "thebonesco.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 68375
+      "size": 68606
     },
     {
       "domain": "boobook.world",
       "filename": "boobook.world.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 103998
-    },
-    {
-      "domain": "buenasuerte.cl",
-      "filename": "buenasuerte.cl.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 72826
+      "size": 103925
     },
     {
       "domain": "bunsenstudio.com",
@@ -263,11 +256,18 @@
       "size": 28819
     },
     {
+      "domain": "buenasuerte.cl",
+      "filename": "buenasuerte.cl.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 72826
+    },
+    {
       "domain": "burocratik.com",
       "filename": "burocratik.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 10424
+      "size": 142971
     },
     {
       "domain": "chemistry.vc",
@@ -281,35 +281,35 @@
       "filename": "bigbracketshq.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 78561
-    },
-    {
-      "domain": "clayboan.com",
-      "filename": "clayboan.com.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 35192
+      "size": 78583
     },
     {
       "domain": "coder.com",
       "filename": "coder.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 71344
+      "size": 71727
     },
     {
-      "domain": "codex.io",
-      "filename": "codex.io.jpg",
+      "domain": "clayboan.com",
+      "filename": "clayboan.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 42072
+      "size": 22859
     },
     {
       "domain": "copy.ai",
       "filename": "copy.ai.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 72859
+      "size": 60135
+    },
+    {
+      "domain": "codex.io",
+      "filename": "codex.io.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 52529
     },
     {
       "domain": "corentinbernadou.com",
@@ -323,7 +323,7 @@
       "filename": "cossette.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 145750
+      "size": 147385
     },
     {
       "domain": "course.studio",
@@ -344,28 +344,28 @@
       "filename": "ctrl.xyz.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 64827
+      "size": 29011
     },
     {
       "domain": "deckdocs.com",
       "filename": "deckdocs.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 54683
+      "size": 53531
     },
     {
       "domain": "deeo.studio",
       "filename": "deeo.studio.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 57510
+      "size": 57634
     },
     {
       "domain": "dbco.online",
       "filename": "dbco.online.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 84984
+      "size": 87715
     },
     {
       "domain": "distributional.com",
@@ -384,9 +384,16 @@
     {
       "domain": "dominony.com",
       "filename": "dominony.com.jpg",
+      "status": "failed",
+      "previousExisted": true,
+      "reason": "page.screenshot: Protocol error (Page.captureScreenshot): Unable to capture screenshot"
+    },
+    {
+      "domain": "dogstudio.co",
+      "filename": "dogstudio.co.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 7238
+      "size": 8401
     },
     {
       "domain": "dondregreen.com",
@@ -400,14 +407,14 @@
       "filename": "dribbble.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 54089
+      "size": 49438
     },
     {
-      "domain": "dogstudio.co",
-      "filename": "dogstudio.co.jpg",
-      "status": "timeout",
+      "domain": "brand.dropbox.com",
+      "filename": "brand.dropbox.com.jpg",
+      "status": "success",
       "previousExisted": true,
-      "reason": "page.screenshot: Timeout 20000ms exceeded."
+      "size": 83238
     },
     {
       "domain": "dich-fashion.webflow.io",
@@ -417,6 +424,13 @@
       "reason": "page.screenshot: Timeout 20000ms exceeded."
     },
     {
+      "domain": "dynacap.com",
+      "filename": "dynacap.com.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 30871
+    },
+    {
       "domain": "e-money.com",
       "filename": "e-money.com.jpg",
       "status": "success",
@@ -424,18 +438,11 @@
       "size": 10627
     },
     {
-      "domain": "brand.dropbox.com",
-      "filename": "brand.dropbox.com.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 82955
-    },
-    {
       "domain": "ebbscandinavia.com",
       "filename": "ebbscandinavia.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 60828
+      "size": 64733
     },
     {
       "domain": "easyseller.it",
@@ -449,35 +456,35 @@
       "filename": "edoardolunardi.dev.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 288391
-    },
-    {
-      "domain": "epic.net",
-      "filename": "epic.net.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 53012
+      "size": 287249
     },
     {
       "domain": "esseninternational.com",
       "filename": "esseninternational.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 56180
+      "size": 75849
     },
     {
       "domain": "ericholton.com",
       "filename": "ericholton.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 26954
+      "size": 26873
     },
     {
       "domain": "factory.ai",
       "filename": "factory.ai.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 15814
+      "size": 15703
+    },
+    {
+      "domain": "epic.net",
+      "filename": "epic.net.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 52820
     },
     {
       "domain": "festival.mmilens.fr",
@@ -485,13 +492,6 @@
       "status": "error",
       "previousExisted": false,
       "reason": "page.goto: net::ERR_NAME_NOT_RESOLVED at https://festival.mmilens.fr/404"
-    },
-    {
-      "domain": "dynacap.com",
-      "filename": "dynacap.com.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 31910
     },
     {
       "domain": "figma.com",
@@ -505,14 +505,14 @@
       "filename": "filmograph.tv.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 286164
+      "size": 285999
     },
     {
       "domain": "firstframe.fr",
       "filename": "firstframe.fr.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 26995
+      "size": 27103
     },
     {
       "domain": "federicorosa.design",
@@ -522,18 +522,18 @@
       "size": 43116
     },
     {
-      "domain": "flayks.com",
-      "filename": "flayks.com.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 42726
-    },
-    {
       "domain": "flyingpapers.com",
       "filename": "flyingpapers.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 36085
+      "size": 36286
+    },
+    {
+      "domain": "flayks.com",
+      "filename": "flayks.com.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 41947
     },
     {
       "domain": "forgge.work",
@@ -561,28 +561,28 @@
       "filename": "frosty.inc.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 9746
+      "size": 10947
     },
     {
       "domain": "gabrielbeaugonin.com",
       "filename": "gabrielbeaugonin.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 13241
+      "size": 13013
     },
     {
       "domain": "fractalforest.co",
       "filename": "fractalforest.co.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 104330
+      "size": 104323
     },
     {
       "domain": "gang.tv",
       "filename": "gang.tv.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 23082
+      "size": 23076
     },
     {
       "domain": "glyphic.bio",
@@ -596,14 +596,21 @@
       "filename": "takeagander.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 48299
+      "size": 48952
     },
     {
       "domain": "glenncatteeuw.com",
       "filename": "glenncatteeuw.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 51349
+      "size": 50958
+    },
+    {
+      "domain": "goodisthenewcool.com",
+      "filename": "goodisthenewcool.com.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 55924
     },
     {
       "domain": "harrysinc.co",
@@ -617,28 +624,7 @@
       "filename": "madeinhaus.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 39673
-    },
-    {
-      "domain": "goodisthenewcool.com",
-      "filename": "goodisthenewcool.com.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 55924
-    },
-    {
-      "domain": "hellohello.is",
-      "filename": "hellohello.is.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 10972
-    },
-    {
-      "domain": "hematogenix.com",
-      "filename": "hematogenix.com.jpg",
-      "status": "cloudflare",
-      "previousExisted": false,
-      "reason": "challenge_detected (security check)"
+      "size": 39626
     },
     {
       "domain": "hejlfoundation.org",
@@ -648,32 +634,39 @@
       "size": 46069
     },
     {
+      "domain": "hellohello.is",
+      "filename": "hellohello.is.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 12468
+    },
+    {
+      "domain": "hematogenix.com",
+      "filename": "hematogenix.com.jpg",
+      "status": "cloudflare",
+      "previousExisted": false,
+      "reason": "challenge_detected (security check)"
+    },
+    {
       "domain": "herocollective.co",
       "filename": "herocollective.co.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 46578
+      "size": 46611
     },
     {
       "domain": "hot-corners.com",
       "filename": "hot-corners.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 154920
-    },
-    {
-      "domain": "iambic.ai",
-      "filename": "iambic.ai.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 73551
+      "size": 154984
     },
     {
       "domain": "hexagon.agency",
       "filename": "hexagon.agency.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 73521
+      "size": 72510
     },
     {
       "domain": "hopaal.com",
@@ -683,11 +676,18 @@
       "reason": "blank_page"
     },
     {
+      "domain": "iambic.ai",
+      "filename": "iambic.ai.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 73551
+    },
+    {
       "domain": "i-d.co",
       "filename": "i-d.co.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 40107
+      "size": 40064
     },
     {
       "domain": "insuratec.com",
@@ -697,32 +697,32 @@
       "size": 43028
     },
     {
-      "domain": "isomorphiclabs.com",
-      "filename": "isomorphiclabs.com.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 45067
-    },
-    {
       "domain": "infracorp.global",
       "filename": "infracorp.global.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 109536
+      "size": 120395
+    },
+    {
+      "domain": "isomorphiclabs.com",
+      "filename": "isomorphiclabs.com.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 45095
     },
     {
       "domain": "intrusionproject.com",
       "filename": "intrusionproject.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 21363
+      "size": 24874
     },
     {
       "domain": "iyo.ai",
       "filename": "iyo.ai.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 67468
+      "size": 67358
     },
     {
       "domain": "jameswalsh.studio",
@@ -739,18 +739,18 @@
       "size": 31735
     },
     {
-      "domain": "jasonbergh.com",
-      "filename": "jasonbergh.com.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 58539
-    },
-    {
       "domain": "johnkappa.com",
       "filename": "johnkappa.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 50371
+      "size": 50924
+    },
+    {
+      "domain": "jasonbergh.com",
+      "filename": "jasonbergh.com.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 58504
     },
     {
       "domain": "jonaspelzer.com",
@@ -760,18 +760,11 @@
       "size": 40555
     },
     {
-      "domain": "journey-digital.com",
-      "filename": "journey-digital.com.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 63237
-    },
-    {
       "domain": "jordangilroy.com",
       "filename": "jordangilroy.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 13604
+      "size": 19409
     },
     {
       "domain": "kielfoods.com.au",
@@ -792,28 +785,28 @@
       "filename": "konpo.studio.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 10401
+      "size": 11449
+    },
+    {
+      "domain": "journey-digital.com",
+      "filename": "journey-digital.com.jpg",
+      "status": "failed",
+      "previousExisted": true,
+      "reason": "page.screenshot: Protocol error (Page.captureScreenshot): Unable to capture screenshot"
     },
     {
       "domain": "leeroy.ca",
       "filename": "leeroy.ca.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 47014
+      "size": 46997
     },
     {
       "domain": "julianfella.de",
       "filename": "julianfella.de.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 44002
-    },
-    {
-      "domain": "lesanimals.digital",
-      "filename": "lesanimals.digital.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 61949
+      "size": 44606
     },
     {
       "domain": "letude.group",
@@ -823,18 +816,32 @@
       "size": 25515
     },
     {
+      "domain": "lesanimals.digital",
+      "filename": "lesanimals.digital.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 68201
+    },
+    {
       "domain": "kurtwinterdesign.com",
       "filename": "kurtwinterdesign.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 16962
+      "size": 63381
+    },
+    {
+      "domain": "loom.com",
+      "filename": "loom.com.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 78435
     },
     {
       "domain": "localstudio.fr",
       "filename": "localstudio.fr.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 7238
+      "size": 52425
     },
     {
       "domain": "lumenartspace.com",
@@ -844,32 +851,18 @@
       "size": 9443
     },
     {
-      "domain": "loom.com",
-      "filename": "loom.com.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 77701
-    },
-    {
       "domain": "locomotive.ca",
       "filename": "locomotive.ca.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 31249
+      "size": 102450
     },
     {
       "domain": "madewithgsap.com",
       "filename": "madewithgsap.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 42928
-    },
-    {
-      "domain": "maelanlemeur.com",
-      "filename": "maelanlemeur.com.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 8770
+      "size": 42955
     },
     {
       "domain": "lyon-beton.com",
@@ -879,18 +872,18 @@
       "size": 63625
     },
     {
+      "domain": "maelanlemeur.com",
+      "filename": "maelanlemeur.com.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 8770
+    },
+    {
       "domain": "makereign.com",
       "filename": "makereign.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 73374
-    },
-    {
-      "domain": "markclennon.com",
-      "filename": "markclennon.com.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 65455
+      "size": 81441
     },
     {
       "domain": "thenerodesign.com",
@@ -898,6 +891,13 @@
       "status": "success",
       "previousExisted": true,
       "size": 72151
+    },
+    {
+      "domain": "markclennon.com",
+      "filename": "markclennon.com.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 65455
     },
     {
       "domain": "martin-laxenaire.fr",
@@ -918,28 +918,21 @@
       "filename": "maxime-ducret.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 7525
+      "size": 7530
     },
     {
       "domain": "maximiliankaspar.com",
       "filename": "maximiliankaspar.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 62910
-    },
-    {
-      "domain": "mccann.fr",
-      "filename": "mccann.fr.jpg",
-      "status": "error",
-      "previousExisted": false,
-      "reason": "page.goto: net::ERR_NAME_NOT_RESOLVED at https://www.mccann.fr/404"
+      "size": 45287
     },
     {
       "domain": "mbds.pro",
       "filename": "mbds.pro.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 41629
+      "size": 12414
     },
     {
       "domain": "mcalpinehouse.com",
@@ -947,6 +940,13 @@
       "status": "success",
       "previousExisted": true,
       "size": 48172
+    },
+    {
+      "domain": "mccann.fr",
+      "filename": "mccann.fr.jpg",
+      "status": "error",
+      "previousExisted": false,
+      "reason": "page.goto: net::ERR_NAME_NOT_RESOLVED at https://www.mccann.fr/404"
     },
     {
       "domain": "metadrop.com",
@@ -960,42 +960,49 @@
       "filename": "memphis.it.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 133358
-    },
-    {
-      "domain": "metalab.com",
-      "filename": "metalab.com.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 83714
+      "size": 49340
     },
     {
       "domain": "michelegre.co",
       "filename": "michelegre.co.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 129338
+      "size": 124157
     },
     {
-      "domain": "midday.ai",
-      "filename": "midday.ai.jpg",
+      "domain": "metalab.com",
+      "filename": "metalab.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 56866
+      "size": 79217
     },
     {
       "domain": "metronome.com",
       "filename": "metronome.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 159600
+      "size": 178721
+    },
+    {
+      "domain": "midday.ai",
+      "filename": "midday.ai.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 56842
+    },
+    {
+      "domain": "mikhailov.studio",
+      "filename": "mikhailov.studio.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 17737
     },
     {
       "domain": "mindfront.ai",
       "filename": "mindfront.ai.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 15980
+      "size": 15966
     },
     {
       "domain": "miromagroup.com",
@@ -1005,25 +1012,18 @@
       "size": 30537
     },
     {
-      "domain": "mikhailov.studio",
-      "filename": "mikhailov.studio.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 43036
-    },
-    {
       "domain": "mount-media.com",
       "filename": "mount-media.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 48148
+      "size": 48997
     },
     {
       "domain": "muradov.design",
       "filename": "muradov.design.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 21120
+      "size": 21062
     },
     {
       "domain": "navbar.gallery",
@@ -1044,14 +1044,14 @@
       "filename": "neutral-studio.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 12049
+      "size": 12040
     },
     {
       "domain": "neithernor.studio",
       "filename": "neithernor.studio.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 38124
+      "size": 31683
     },
     {
       "domain": "niccolomiranda.com",
@@ -1061,13 +1061,6 @@
       "size": 120570
     },
     {
-      "domain": "nickdimatteo.com",
-      "filename": "nickdimatteo.com.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 119085
-    },
-    {
       "domain": "new.studio",
       "filename": "new.studio.jpg",
       "status": "success",
@@ -1075,53 +1068,74 @@
       "size": 107707
     },
     {
+      "domain": "nickdimatteo.com",
+      "filename": "nickdimatteo.com.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 128304
+    },
+    {
       "domain": "newarc.io",
       "filename": "newarc.io.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 47664
+      "size": 47407
     },
     {
       "domain": "nightjar.co",
       "filename": "nightjar.co.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 102766
+      "size": 102571
+    },
+    {
+      "domain": "nikbentel.com",
+      "filename": "nikbentel.com.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 60225
     },
     {
       "domain": "nicolasalain.com",
       "filename": "nicolasalain.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 42238
+      "size": 34679
     },
     {
       "domain": "nite-riot.com",
       "filename": "nite-riot.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 71912
-    },
-    {
-      "domain": "nitex.com",
-      "filename": "nitex.com.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 72511
+      "size": 70548
     },
     {
       "domain": "norgram.co",
       "filename": "norgram.co.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 56767
+      "size": 58236
+    },
+    {
+      "domain": "nitex.com",
+      "filename": "nitex.com.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 72392
     },
     {
       "domain": "okaydev.co",
       "filename": "okaydev.co.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 59958
+      "size": 59946
+    },
+    {
+      "domain": "oldtomcapital.com",
+      "filename": "oldtomcapital.com.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 27307
     },
     {
       "domain": "getnudge.info",
@@ -1129,13 +1143,6 @@
       "status": "success",
       "previousExisted": true,
       "size": 67177
-    },
-    {
-      "domain": "oldtomcapital.com",
-      "filename": "oldtomcapital.com.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 27279
     },
     {
       "domain": "openai.com",
@@ -1149,28 +1156,28 @@
       "filename": "outkast.studio.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 32221
-    },
-    {
-      "domain": "orage.studio",
-      "filename": "orage.studio.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 141443
+      "size": 32248
     },
     {
       "domain": "pangrampangram.com",
       "filename": "pangrampangram.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 70951
+      "size": 70925
     },
     {
       "domain": "paribu.com",
       "filename": "paribu.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 32667
+      "size": 32664
+    },
+    {
+      "domain": "orage.studio",
+      "filename": "orage.studio.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 153913
     },
     {
       "domain": "permian.world",
@@ -1180,25 +1187,18 @@
       "size": 9292
     },
     {
-      "domain": "pioneer.fin.ai",
-      "filename": "pioneer.fin.ai.jpg",
+      "domain": "pitch.com",
+      "filename": "pitch.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 11756
+      "size": 39903
     },
     {
       "domain": "pedestal.com",
       "filename": "pedestal.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 50190
-    },
-    {
-      "domain": "pitch.com",
-      "filename": "pitch.com.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 39903
+      "size": 50800
     },
     {
       "domain": "planet-lizard.com",
@@ -1208,18 +1208,18 @@
       "size": 37791
     },
     {
+      "domain": "pioneer.fin.ai",
+      "filename": "pioneer.fin.ai.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 13185
+    },
+    {
       "domain": "polpissystems.com",
       "filename": "polpissystems.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 77267
-    },
-    {
-      "domain": "theplaya.solutions",
-      "filename": "theplaya.solutions.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 50197
+      "size": 76998
     },
     {
       "domain": "poolside.ai",
@@ -1229,32 +1229,32 @@
       "size": 25933
     },
     {
-      "domain": "nikbentel.com",
-      "filename": "nikbentel.com.jpg",
-      "status": "timeout",
+      "domain": "theplaya.solutions",
+      "filename": "theplaya.solutions.jpg",
+      "status": "success",
       "previousExisted": true,
-      "reason": "page.goto: Timeout 30000ms exceeded."
+      "size": 51614
     },
     {
       "domain": "purposetalent.xyz",
       "filename": "purposetalent.xyz.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 46841
+      "size": 46839
     },
     {
       "domain": "quentinhocde.com",
       "filename": "quentinhocde.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 7238
+      "size": 7534
     },
     {
       "domain": "read.cv",
       "filename": "read.cv.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 14154
+      "size": 14170
     },
     {
       "domain": "raredays.com",
@@ -1275,21 +1275,21 @@
       "filename": "en.refire.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 16257
+      "size": 16036
     },
     {
       "domain": "reflect.app",
       "filename": "reflect.app.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 55477
+      "size": 55660
     },
     {
       "domain": "rekki.com",
       "filename": "rekki.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 46558
+      "size": 46804
     },
     {
       "domain": "retool.com",
@@ -1306,18 +1306,18 @@
       "size": 38107
     },
     {
+      "domain": "rxkstudio.com",
+      "filename": "rxkstudio.com.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 22920
+    },
+    {
       "domain": "saasexplainervideos.com",
       "filename": "saasexplainervideos.com.jpg",
       "status": "success",
       "previousExisted": true,
       "size": 54150
-    },
-    {
-      "domain": "scope-typeface.com",
-      "filename": "scope-typeface.com.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 219019
     },
     {
       "domain": "reelgood.com",
@@ -1327,39 +1327,39 @@
       "reason": "challenge_detected (just a moment)"
     },
     {
+      "domain": "scope-typeface.com",
+      "filename": "scope-typeface.com.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 10299
+    },
+    {
       "domain": "shiftnudge.com",
       "filename": "shiftnudge.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 220682
+      "size": 166601
     },
     {
       "domain": "showrunnnners.com",
       "filename": "showrunnnners.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 67398
+      "size": 17564
     },
     {
       "domain": "sidekick.agency",
       "filename": "sidekick.agency.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 56479
+      "size": 56618
     },
     {
       "domain": "significa.co",
       "filename": "significa.co.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 299086
-    },
-    {
-      "domain": "slack.com",
-      "filename": "slack.com.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 126721
+      "size": 299688
     },
     {
       "domain": "snohetta.com",
@@ -1369,18 +1369,32 @@
       "size": 21342
     },
     {
+      "domain": "slack.com",
+      "filename": "slack.com.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 126696
+    },
+    {
       "domain": "sohub.digital",
       "filename": "sohub.digital.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 49190
+      "size": 63921
     },
     {
       "domain": "sonarmusic.com.au",
       "filename": "sonarmusic.com.au.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 67503
+      "size": 67103
+    },
+    {
+      "domain": "spiraldb.com",
+      "filename": "spiraldb.com.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 116473
     },
     {
       "domain": "speakeasy.com",
@@ -1390,32 +1404,18 @@
       "size": 57072
     },
     {
-      "domain": "spiraldb.com",
-      "filename": "spiraldb.com.jpg",
+      "domain": "sqirlla.com",
+      "filename": "sqirlla.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 115146
+      "size": 68521
     },
     {
       "domain": "springsummer.dk",
       "filename": "springsummer.dk.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 19791
-    },
-    {
-      "domain": "rxkstudio.com",
-      "filename": "rxkstudio.com.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 22869
-    },
-    {
-      "domain": "sqirlla.com",
-      "filename": "sqirlla.com.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 78865
+      "size": 80124
     },
     {
       "domain": "structured.money",
@@ -1425,18 +1425,25 @@
       "reason": "page.goto: net::ERR_NAME_NOT_RESOLVED at https://www.structured.money/404"
     },
     {
-      "domain": "studiodado.com",
-      "filename": "studiodado.com.jpg",
+      "domain": "squarespace.com",
+      "filename": "squarespace.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 12029
+      "size": 37770
     },
     {
       "domain": "stack.vc",
       "filename": "stack.vc.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 23032
+      "size": 23279
+    },
+    {
+      "domain": "studiodado.com",
+      "filename": "studiodado.com.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 55002
     },
     {
       "domain": "superkeen.studio",
@@ -1446,18 +1453,11 @@
       "size": 29541
     },
     {
-      "domain": "squarespace.com",
-      "filename": "squarespace.com.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 33617
-    },
-    {
       "domain": "supersolid.agency",
       "filename": "supersolid.agency.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 108633
+      "size": 111161
     },
     {
       "domain": "surella.fr",
@@ -1467,39 +1467,32 @@
       "size": 52724
     },
     {
-      "domain": "tabitha.works",
-      "filename": "tabitha.works.jpg",
+      "domain": "tars.pro",
+      "filename": "tars.pro.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 81628
-    },
-    {
-      "domain": "theboncollectif.com",
-      "filename": "theboncollectif.com.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 80266
+      "size": 60404
     },
     {
       "domain": "terradactyl.xyz",
       "filename": "terradactyl.xyz.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 11178
+      "size": 11725
     },
     {
-      "domain": "tars.pro",
-      "filename": "tars.pro.jpg",
+      "domain": "theboncollectif.com",
+      "filename": "theboncollectif.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 58165
+      "size": 81006
     },
     {
       "domain": "thecollectedworks.com",
       "filename": "thecollectedworks.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 56341
+      "size": 56666
     },
     {
       "domain": "thenewcompany.com",
@@ -1509,46 +1502,46 @@
       "size": 23948
     },
     {
-      "domain": "lisovskiy.work",
-      "filename": "lisovskiy.work.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 35038
-    },
-    {
       "domain": "thmssnglmnt.com",
       "filename": "thmssnglmnt.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 12355
+      "size": 12599
     },
     {
-      "domain": "triplettapizza.com",
-      "filename": "triplettapizza.com.jpg",
+      "domain": "lisovskiy.work",
+      "filename": "lisovskiy.work.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 82617
+      "size": 34215
+    },
+    {
+      "domain": "tabitha.works",
+      "filename": "tabitha.works.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 81417
     },
     {
       "domain": "twicemediahouse.com",
       "filename": "twicemediahouse.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 14734
+      "size": 14541
     },
     {
-      "domain": "twogood.com.au",
-      "filename": "twogood.com.au.jpg",
+      "domain": "triplettapizza.com",
+      "filename": "triplettapizza.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 66043
+      "size": 82418
     },
     {
-      "domain": "unseen.co",
-      "filename": "unseen.co.jpg",
+      "domain": "tomgould.com",
+      "filename": "tomgould.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 16948
+      "size": 15743
     },
     {
       "domain": "vana.com",
@@ -1556,6 +1549,13 @@
       "status": "success",
       "previousExisted": true,
       "size": 38397
+    },
+    {
+      "domain": "twogood.com.au",
+      "filename": "twogood.com.au.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 66043
     },
     {
       "domain": "vandstrom.com",
@@ -1569,14 +1569,28 @@
       "filename": "findyourvana.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 8666
+      "size": 8671
+    },
+    {
+      "domain": "unseen.co",
+      "filename": "unseen.co.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 16415
     },
     {
       "domain": "vap.studio",
       "filename": "vap.studio.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 10142
+      "size": 7238
+    },
+    {
+      "domain": "verde.io",
+      "filename": "verde.io.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 100542
     },
     {
       "domain": "vercel.com",
@@ -1593,39 +1607,18 @@
       "size": 38731
     },
     {
-      "domain": "tomgould.com",
-      "filename": "tomgould.com.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 16693
-    },
-    {
       "domain": "webflow.com",
       "filename": "webflow.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 59215
+      "size": 60576
     },
     {
       "domain": "wildyriftian.com",
       "filename": "wildyriftian.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 24267
-    },
-    {
-      "domain": "wolffolins.com",
-      "filename": "wolffolins.com.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 147389
-    },
-    {
-      "domain": "verde.io",
-      "filename": "verde.io.jpg",
-      "status": "success",
-      "previousExisted": true,
-      "size": 100521
+      "size": 24831
     },
     {
       "domain": "yuba.world",
@@ -1642,11 +1635,18 @@
       "size": 57027
     },
     {
+      "domain": "wolffolins.com",
+      "filename": "wolffolins.com.jpg",
+      "status": "success",
+      "previousExisted": true,
+      "size": 97013
+    },
+    {
       "domain": "yzavoku.com",
       "filename": "yzavoku.com.jpg",
       "status": "success",
       "previousExisted": true,
-      "size": 27970
+      "size": 27682
     }
   ]
 }
