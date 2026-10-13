@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Screenshot run report (uploaded as a CI artifact instead)
+screenshot-report.json
+discover-report.json

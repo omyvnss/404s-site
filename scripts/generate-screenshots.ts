@@ -1,9 +1,8 @@
-import { chromium } from 'playwright'
-import { mkdirSync, writeFileSync, readFileSync, existsSync } from 'fs'
+import { mkdirSync, writeFileSync, readFileSync, existsSync, unlinkSync } from 'fs'
 import { join, dirname, resolve } from 'path'
 import { fileURLToPath } from 'url'
-import { parseCSV, deduplicateSites, extractCleanUrl, generateScreenshotFilename, type SiteEntry } from './urls.js'
-import { validateScreenshot } from './validate.js'
+import { parseCSV, deduplicateSites, extractCleanUrl, generateScreenshotFilename } from './urls.js'
+import { captureSite, isBlankFile, launchCaptureBrowser, type ScreenshotResult } from './capture.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -11,33 +10,20 @@ const __dirname = dirname(__filename)
 const PROJECT_ROOT = resolve(__dirname, '..')
 const PREVIEWS_DIR = join(PROJECT_ROOT, 'public', 'previews')
 const MANIFEST_PATH = join(PREVIEWS_DIR, 'manifest.json')
+const SITES_PATH = join(PROJECT_ROOT, 'public', 'sites.json')
+// Sites added by the discovery engine (scripts/discover), newest first.
+const DISCOVERED_PATH = join(PROJECT_ROOT, 'data', 'discovered.json')
+// Domains removed by hand (e.g. the domain now hosts something unrelated).
+const BLOCKLIST_PATH = join(PROJECT_ROOT, 'data', 'blocklist.json')
 const REPORT_PATH = join(PROJECT_ROOT, 'screenshot-report.json')
 
-// Card displays at ~356px wide (3:2). 1280x853 captures full desktop layout;
-// object-fit: cover crops vertically only, keeping the composition intact.
-const CAPTURE_WIDTH = 1280
-const CAPTURE_HEIGHT = Math.round((CAPTURE_WIDTH * 2) / 3) // 853 ≈ 3:2
-
-// Allow slow real-world sites; not the old 3s client-side timeout.
-const NAVIGATION_TIMEOUT = 30000
-const NETWORK_IDLE_TIMEOUT = 8000
-const RENDER_SETTLE_MS = 1500
-const MAX_CONCURRENT = 3
-const MAX_ATTEMPTS = 2 // initial try + 1 retry
+const MAX_CONCURRENT = 4
 const SAVE_EVERY = 5 // persist manifest/report incrementally
 
 // Optional subset for local testing: LIMIT=10 npm run screenshots
 const LIMIT = process.env.LIMIT ? parseInt(process.env.LIMIT, 10) : undefined
-
-interface ScreenshotResult {
-  url: string
-  domain: string
-  filename: string
-  status: 'success' | 'failed' | 'cloudflare' | 'error' | 'timeout'
-  previousExisted: boolean
-  size?: number
-  reason?: string
-}
+// Or target specific domains: ONLY=dogstudio.co,figma.com npm run screenshots
+const ONLY = process.env.ONLY ? process.env.ONLY.split(',').map(d => d.trim()) : undefined
 
 function fetchCSV(): Promise<string> {
   return fetch(
@@ -58,85 +44,6 @@ function loadJSON<T>(path: string, fallback: T): T {
   }
 }
 
-function classifyError(message: string): ScreenshotResult['status'] {
-  const m = message.toLowerCase()
-  if (m.includes('cloudflare') || m.includes('challenge') || m.includes('captcha')) return 'cloudflare'
-  if (m.includes('timeout') || m.includes('timed out') || m.includes('navigation')) return 'timeout'
-  if (
-    m.includes('error_page') ||
-    m.includes('blank_page') ||
-    m.includes('no_visible_content') ||
-    m.includes('dns') ||
-    m.includes('connection') ||
-    m.includes('net::err')
-  ) {
-    return 'error'
-  }
-  return 'failed'
-}
-
-async function captureSite(
-  context: import('playwright').BrowserContext,
-  entry: SiteEntry,
-  filename: string,
-  filepath: string,
-  previousExisted: boolean
-): Promise<ScreenshotResult> {
-  const cleanUrl = extractCleanUrl(entry.url)
-  let lastReason = 'Unknown error'
-
-  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
-    const page = await context.newPage()
-    try {
-      await page.goto(cleanUrl, {
-        waitUntil: 'domcontentloaded',
-        timeout: NAVIGATION_TIMEOUT,
-      })
-
-      // Give JS-heavy pages time to render; don't fail hard on network idle.
-      await page.waitForLoadState('networkidle', { timeout: NETWORK_IDLE_TIMEOUT }).catch(() => {})
-      await page.waitForTimeout(RENDER_SETTLE_MS)
-
-      const screenshotBuffer = await page.screenshot({
-        type: 'jpeg',
-        quality: 80,
-        clip: { x: 0, y: 0, width: CAPTURE_WIDTH, height: CAPTURE_HEIGHT },
-        timeout: 20000,
-      })
-
-      const validation = await validateScreenshot(page, screenshotBuffer)
-      if (!validation.valid) {
-        lastReason = `${validation.reason}${validation.details?.matched ? ` (${String(validation.details.matched)})` : ''}`
-        continue
-      }
-
-      writeFileSync(filepath, screenshotBuffer)
-      return {
-        url: entry.url,
-        domain: entry.domain,
-        filename,
-        status: 'success',
-        previousExisted,
-        size: screenshotBuffer.length,
-      }
-    } catch (err) {
-      lastReason = err instanceof Error ? err.message : String(err)
-    } finally {
-      // Always close the page so one crash can't poison the shared context.
-      await page.close().catch(() => {})
-    }
-  }
-
-  return {
-    url: entry.url,
-    domain: entry.domain,
-    filename,
-    status: classifyError(lastReason),
-    previousExisted,
-    reason: lastReason.split('\n')[0].slice(0, 120),
-  }
-}
-
 async function main(): Promise<void> {
   console.log('🚀 Starting screenshot generation...')
 
@@ -151,30 +58,18 @@ async function main(): Promise<void> {
     process.exit(1)
   }
 
-  const sites = parseCSV(csv)
-  const all = deduplicateSites(sites)
-  const deduped = LIMIT ? all.slice(0, LIMIT) : all
-  console.log(`📋 Found ${sites.length} entries, ${deduped.length} after dedup${LIMIT ? ` (limited to ${LIMIT})` : ''}`)
+  const discovered = loadJSON<Array<{ url: string; domain: string; dateAdded: string }>>(DISCOVERED_PATH, [])
+  const sites = [...discovered, ...parseCSV(csv)]
+  const blocklist = new Set(Object.keys(loadJSON<Record<string, string>>(BLOCKLIST_PATH, {})))
+  const all = deduplicateSites(sites).filter(s => !blocklist.has(s.domain))
+  const subset = ONLY ? all.filter(e => ONLY.includes(e.domain)) : all
+  const deduped = LIMIT ? subset.slice(0, LIMIT) : subset
+  const partial = Boolean(LIMIT || ONLY)
+  console.log(`📋 Found ${sites.length} entries, ${deduped.length} to process${partial ? ' (partial run)' : ''}`)
 
   const manifest = loadJSON<Record<string, string>>(MANIFEST_PATH, {})
 
-  const browser = await chromium.launch({
-    headless: true,
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-gpu',
-    ],
-  })
-
-  const context = await browser.newContext({
-    viewport: { width: CAPTURE_WIDTH, height: CAPTURE_HEIGHT },
-    userAgent:
-      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
-    ignoreHTTPSErrors: true,
-    locale: 'en-US',
-  })
+  const { browser, context, scratch } = await launchCaptureBrowser()
 
   const queue = [...deduped]
   let processed = 0
@@ -182,7 +77,7 @@ async function main(): Promise<void> {
 
   async function flush(): Promise<void> {
     const summary = buildSummary(results, deduped.length)
-    writeFileSync(MANIFEST_PATH, JSON.stringify(manifest, null, 2))
+    writeFileSync(MANIFEST_PATH, JSON.stringify(sortKeys(manifest), null, 2) + '\n')
     writeFileSync(REPORT_PATH, JSON.stringify(summary, null, 2))
   }
 
@@ -193,20 +88,32 @@ async function main(): Promise<void> {
 
       const filename = generateScreenshotFilename(entry.url)
       const filepath = join(PREVIEWS_DIR, filename)
+      const cleanUrl = extractCleanUrl(entry.url)
       const previousExisted = existsSync(filepath)
 
-      const result = await captureSite(context, entry, filename, filepath, previousExisted)
+      const result = await captureSite(context, scratch, entry, filename, filepath, previousExisted)
       results.push(result)
       processed++
+      const tag = `[${processed}/${deduped.length}] ${entry.domain}`
 
-      if (result.status === 'success') {
-        manifest[extractCleanUrl(entry.url)] = filename
-        console.log(
-          `✅ [${processed}/${deduped.length}] ${entry.domain} (${result.size ?? 0} bytes)${previousExisted ? ' [updated]' : ' [new]'}`
-        )
+      if (result.status === 'success' || result.status === 'unchanged') {
+        manifest[cleanUrl] = filename
+        const note = result.status === 'unchanged' ? ' [unchanged]' : previousExisted ? ' [updated]' : ' [new]'
+        console.log(`✅ ${tag} (${result.size ?? 0} bytes)${note}`)
+      } else if (result.status === 'dead') {
+        // Parked / suspended / bare server page — the design is gone.
+        if (previousExisted) unlinkSync(filepath)
+        delete manifest[cleanUrl]
+        console.log(`💀 ${tag}: ${result.reason}`)
       } else {
-        // Keep previous valid screenshot — do NOT overwrite with bad captures.
-        console.log(`❌ [${processed}/${deduped.length}] ${entry.domain}: ${result.status} — ${result.reason}`)
+        // Keep previous valid screenshot — but drop one that is itself a flat
+        // black/blank frame, the card placeholder looks better than that.
+        if (previousExisted && (await isBlankFile(scratch, filepath))) {
+          unlinkSync(filepath)
+          delete manifest[cleanUrl]
+          console.log(`🗑️  ${tag}: removed stale blank preview`)
+        }
+        console.log(`❌ ${tag}: ${result.status} — ${result.reason}`)
       }
 
       if (processed % SAVE_EVERY === 0) {
@@ -222,10 +129,33 @@ async function main(): Promise<void> {
 
   await flush()
 
+  // Static site index the frontend loads instead of hitting the Sheet live.
+  // Skipped for partial runs so a local test can't truncate the gallery.
+  if (!partial) {
+    // Domains that no longer exist are dropped from the gallery (re-checked daily,
+    // so a one-off DNS blip only hides a site for a day).
+    const dead = new Set(
+      results.filter(r => r.status === 'dead' || /ERR_NAME_NOT_RESOLVED/.test(r.reason ?? '')).map(r => r.url)
+    )
+    const siteIndex = all.filter(entry => !dead.has(entry.url)).map(entry => {
+      const filename = generateScreenshotFilename(entry.url)
+      return {
+        url: extractCleanUrl(entry.url),
+        domain: entry.domain,
+        dateAdded: entry.dateAdded,
+        preview: existsSync(join(PREVIEWS_DIR, filename)) ? filename : null,
+      }
+    })
+    writeFileSync(SITES_PATH, JSON.stringify(siteIndex, null, 2) + '\n')
+    console.log(`🗂️  Wrote ${siteIndex.length} sites to ${SITES_PATH} (${dead.size} dead domains hidden)`)
+  }
+
   const s = buildSummary(results, deduped.length)
   console.log('\n📊 Screenshot Generation Report:')
   console.log(`   Total:              ${s.total}`)
   console.log(`   Generated:          ${s.generated}`)
+  console.log(`   Unchanged (kept):   ${s.unchanged}`)
+  console.log(`   Blank frames:       ${s.blank}`)
   console.log(`   Updated:            ${s.updated}`)
   console.log(`   New:                ${s.new}`)
   console.log(`   Failed (kept prev): ${s.failedKept}`)
@@ -238,6 +168,7 @@ async function main(): Promise<void> {
 
 function buildSummary(results: ScreenshotResult[], plannedTotal: number) {
   const success = results.filter(r => r.status === 'success')
+  const ok = (r: ScreenshotResult) => r.status === 'success' || r.status === 'unchanged'
   return {
     timestamp: new Date().toISOString(),
     total: results.length,
@@ -245,12 +176,18 @@ function buildSummary(results: ScreenshotResult[], plannedTotal: number) {
     generated: success.length,
     updated: success.filter(r => r.previousExisted).length,
     new: success.filter(r => !r.previousExisted).length,
-    failedKept: results.filter(r => r.previousExisted && r.status !== 'success').length,
+    unchanged: results.filter(r => r.status === 'unchanged').length,
+    blank: results.filter(r => r.status === 'blank').length,
+    failedKept: results.filter(r => r.previousExisted && !ok(r)).length,
     cloudflare: results.filter(r => r.status === 'cloudflare').length,
     timeout: results.filter(r => r.status === 'timeout').length,
     otherErrors: results.filter(r => r.status === 'error' || r.status === 'failed').length,
     details: results.map(({ url: _u, ...rest }) => rest),
   }
+}
+
+function sortKeys(obj: Record<string, string>): Record<string, string> {
+  return Object.fromEntries(Object.entries(obj).sort(([a], [b]) => a.localeCompare(b)))
 }
 
 main().catch(err => {

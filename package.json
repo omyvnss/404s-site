@@ -9,7 +9,12 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "generate:screenshots": "tsx scripts/generate-screenshots.ts",
-    "screenshots": "tsx scripts/generate-screenshots.ts"
+    "screenshots": "tsx scripts/generate-screenshots.ts",
+    "generate:og": "tsx scripts/generate-og.ts",
+    "discover": "tsx scripts/discover/index.ts",
+    "verify:data": "tsx scripts/verify-data.ts",
+    "typecheck:scripts": "tsc -p tsconfig.scripts.json",
+    "fetch:favicons": "tsx scripts/fetch-favicons.ts"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",

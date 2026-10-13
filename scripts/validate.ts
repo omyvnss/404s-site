@@ -52,10 +52,62 @@ const BROWSER_ERROR_PATTERNS = [
   'your connection is not private',
 ]
 
+/**
+ * The site itself is gone or replaced — parked domain, suspended host, paused
+ * deployment, Cloudflare origin error. These are hidden from the gallery.
+ */
+const DEAD_SITE_PATTERNS = [
+  'this service has been suspended',
+  'account has been suspended',
+  'this account has been suspended',
+  'deployment is temporarily paused',
+  'this deployment has been disabled',
+  'deployment_not_found',
+  'domain is for sale',
+  'domain for sale',
+  'domain may be for sale',
+  'buy this domain',
+  'this domain is parked',
+  'domain has expired',
+  "there isn't a github pages site here",
+  'site not found · github pages',
+  'project not found',
+  'web server is down',
+  'connection timed out error code',
+  'origin is unreachable',
+  'cloudflare ray id',
+]
+
+const PARKING_HOSTS =
+  /^(expireddomains|afternic|godaddy|sedo|dan|hugedomains|undeveloped|parkingcrew|bodis|namecheap|porkbun|squadhelp|atom|spaceship|domainmarket|brandbucket|sav|epik|uniregistry|above|parklogic|domainnamesales)\.(com|net|io|co)$/
+
+/** "studio.co.uk" for "www.studio.co.uk" — good enough to spot off-site redirects. */
+function siteKey(host: string): string {
+  const parts = host.toLowerCase().replace(/^www\./, '').split('.')
+  const twoPartTld = parts.length > 2 && parts[parts.length - 2].length <= 3 && parts[parts.length - 1].length === 2
+  return parts.slice(twoPartTld ? -3 : -2).join('.')
+}
+
 export async function validateScreenshot(
   page: Page,
-  screenshotBuffer: Buffer
+  screenshotBuffer: Buffer,
+  requestedUrl?: string
 ): Promise<ValidationResult> {
+  // Redirected to a different site (domain marketplace, parked page, rebrand).
+  if (requestedUrl) {
+    try {
+      const from = siteKey(new URL(requestedUrl).hostname)
+      const to = siteKey(new URL(page.url()).hostname)
+      // A rebrand (vana.com → vana.org) still shows the brand's own 404; only
+      // domain marketplaces and parking hosts mean the site is gone.
+      if (from !== to && PARKING_HOSTS.test(to)) {
+        return { valid: false, reason: 'site_dead', details: { matched: `redirected to ${to}` } }
+      }
+    } catch {
+      /* ignore unparsable URLs */
+    }
+  }
+
   // 1. Screenshot sanity checks (JPEG: FF D8 FF)
   if (screenshotBuffer.length < 3000) {
     return {
@@ -113,6 +165,26 @@ export async function validateScreenshot(
         details: { matched: pattern },
       }
     }
+  }
+
+  for (const pattern of DEAD_SITE_PATTERNS) {
+    if (bodyText.includes(pattern)) {
+      return { valid: false, reason: 'site_dead', details: { matched: pattern } }
+    }
+  }
+
+  // Unstyled server text ("HTTP Status: 404", "Not Found") — not a designed page.
+  const bare = await page
+    .evaluate(`(() => {
+      const visual = document.querySelectorAll('img, svg, canvas, video, picture, iframe').length
+      // Ignore the overlay-hiding sheet and inline styles our capture injects.
+      const sheets = [...document.styleSheets].filter(s => !(s.ownerNode && (s.ownerNode.textContent || '').includes('onetrust-consent-sdk')))
+      const styled = sheets.length + document.querySelectorAll('body [style]:not([style*="display: none"])').length
+      return visual === 0 && styled === 0
+    })()`)
+    .catch(() => false)
+  if (bare && bodyText.replace(/\s+/g, ' ').trim().length < 200) {
+    return { valid: false, reason: 'site_dead', details: { matched: 'unstyled server page' } }
   }
 
   // 4. Blank-page detection: near-empty body with no meaningful title

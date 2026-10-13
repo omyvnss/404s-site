@@ -1,0 +1,147 @@
+name: Daily update
+
+on:
+  schedule:
+    # Daily at 03:23 UTC (08:53 IST). Off the top of the hour — GitHub delays
+    # or drops scheduled runs during the :00 rush.
+    - cron: '23 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  generate-screenshots:
+    name: Generate previews
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Discover a new 404 page (OpenRouter free models)
+        # Each step is gated by a verifier; failures here never block the refresh.
+        continue-on-error: true
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: npm run discover
+
+      - name: Refresh screenshots
+        run: npm run generate:screenshots
+
+      - name: Fetch favicons
+        run: npm run fetch:favicons
+
+      - name: Verify data
+        run: npm run verify:data
+
+      - name: Commit updated previews
+        id: commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Report is uploaded as an artifact; only real content changes are committed
+          # (unchanged pages keep their old JPEG, so most days this is a tiny diff).
+          git add public/previews/ public/favicons/ public/sites.json data/
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No preview changes — skipping commit"
+          else
+            NEW=$(jq -r '[.added[].domain] | join(", ")' discover-report.json 2>/dev/null || true)
+            git commit -m "chore(daily): ${NEW:+add $NEW, }refresh screenshots"
+            # main may have moved during the ~15 min run
+            git pull --rebase --autostash origin main
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Job summary
+        if: always()
+        run: |
+          if [ -f discover-report.json ]; then
+            jq -r '"## Discovery\n\nTried \(.tried) candidates, added \(.added | length): \([.added[] | "[\(.domain)](\(.url)) (score \(.score))"] | join(", "))\n\n| Candidate | Step | OK | Detail |\n|---|---|---|---|\n" + ([.trace[] | "| \(.candidate | gsub("\\|"; "/")) | \(.step) | \(if .ok then "✅" else "❌" end) | \(.detail | gsub("\\|"; "/")) |"] | join("\n")) + "\n"' \
+              discover-report.json >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ -f screenshot-report.json ]; then
+            jq -r '"## Screenshot Report\n\n| Metric | Count |\n|---|---|\n| Processed | \(.total) |\n| Generated | \(.generated) |\n| Unchanged | \(.unchanged) |\n| Blank frames | \(.blank) |\n| Updated | \(.updated) |\n| New | \(.new) |\n| Kept previous (failed) | \(.failedKept) |\n| Cloudflare rejected | \(.cloudflare) |\n| Timeouts | \(.timeout) |\n| Other errors | \(.otherErrors) |"' \
+              screenshot-report.json >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "No report produced" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Keep schedule alive
+        # GitHub disables cron workflows after 60 days without repo activity;
+        # commits only happen on real changes now, so re-enable explicitly.
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow enable daily-update.yml --repo "$GITHUB_REPOSITORY" || true
+
+      - name: Upload report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-report
+          path: |
+            screenshot-report.json
+            discover-report.json
+          retention-days: 30
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: generate-screenshots
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Write CNAME
+        run: echo "404s.vaultnco.store" > dist/CNAME
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
