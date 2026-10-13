@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #1e1e1e;
-  --color-surface: #282828;
-  --color-text: #ffffff;
+  --color-bg: #121212;
+  --color-surface: #1a1a1a;
+  --color-text: #f5f5f5;
   --color-muted: #8a8a8a;
-  --color-hairline: rgba(255,255,255,0.06);
+  --color-hairline: rgba(255,255,255,0.07);
 
   --font-display: "Geist", "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono-ui: "Geist Mono", "JetBrains Mono", ui-monospace, monospace;
@@ -76,7 +76,8 @@ body {
   left: 0;
   right: 0;
   z-index: 100;
-  background: rgba(30,30,30,0.85);
+  background: rgba(18,18,18,0.8);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
   backdrop-filter: blur(0.4rem) saturate(180%);
   -webkit-backdrop-filter: blur(0.4rem) saturate(180%);
   contain: layout style;
@@ -90,12 +91,21 @@ body {
 }
 
 .nav-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   font-family: var(--font-mono-ui);
   font-size: 0.8rem;
   font-weight: 600;
   letter-spacing: 0.02em;
   color: var(--color-text);
   text-decoration: none;
+}
+
+.nav-logo-mark {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
 }
 
 .nav-logo:hover {
@@ -159,15 +169,36 @@ body {
 
 /* ============ HERO ============ */
 .hero {
-  padding-top: 8rem;
-  text-align: center;
+  padding-top: 7rem;
+  padding-bottom: 2.5rem;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-mono-ui);
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* Live dot — signals the gallery grows daily */
+.hero-dot {
+  width: 0.3rem;
+  height: 0.3rem;
+  border-radius: 50%;
+  background: #3ddc84;
+  box-shadow: 0 0 0 0.18rem rgba(61,220,132,0.12);
 }
 
 .hero-heading {
+  margin-top: 1.4rem;
   font-family: var(--font-display);
-  font-size: 2.2rem;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
+  font-size: 3.6rem;
+  line-height: 0.95;
+  letter-spacing: -0.045em;
   font-weight: 400;
   color: var(--color-text);
 }
@@ -175,38 +206,80 @@ body {
 .hero-heading .strikethrough {
   position: relative;
   display: inline-block;
+  color: rgba(255,255,255,0.38);
 }
 
+/* The line draws across "not" once — the whole idea of the site in one gesture */
 .hero-heading .strikethrough::after {
   content: '';
   position: absolute;
-  left: 0;
-  right: 0;
-  top: 52%;
-  height: 0.075rem;
+  left: -0.04em;
+  right: -0.04em;
+  top: 54%;
+  height: 0.055em;
   background: var(--color-text);
-  transform: translateY(-50%);
+  transform-origin: left center;
+  animation: strike-in 0.7s cubic-bezier(0.65, 0, 0.35, 1) 0.35s both;
+}
+
+@keyframes strike-in {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.hero-foot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-top: 1.6rem;
+  padding-bottom: 1.6rem;
+  border-bottom: 1px solid var(--color-hairline);
 }
 
 .hero-subtitle {
-  margin-top: 0.8rem;
   font-family: var(--font-display);
-  font-size: 0.9rem;
-  line-height: 1.4;
-  letter-spacing: -0.01em;
-  font-weight: 400;
-  color: rgba(255,255,255,0.5);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  letter-spacing: -0.005em;
+  color: var(--color-muted);
 }
 
-.hero-gap {
-  height: 8.5rem;
+.hero-latest {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  height: 1.6rem;
+  padding: 0 0.7rem;
+  font-family: var(--font-mono-ui);
+  font-size: 0.55rem;
+  letter-spacing: 0.04em;
+  color: var(--color-text);
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 999px;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.hero-latest:hover {
+  text-decoration: none;
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.18);
+}
+
+.hero-latest-label {
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 @media (max-width: 699px) {
-  .hero { padding-top: 2.5rem; }
-  .hero-heading { font-size: 1.4rem; letter-spacing: -0.02em; }
+  .hero { padding-top: 4.5rem; padding-bottom: 2rem; }
+  .hero-heading { font-size: 2.1rem; letter-spacing: -0.035em; }
+  .hero-foot { flex-direction: column; align-items: flex-start; gap: 1rem; }
   .hero-subtitle { font-size: 0.7rem; }
-  .hero-gap { height: 2rem; }
+  .hero-subtitle br { display: none; }
 }
 
 /* ============ TOOLBAR ============ */
@@ -406,6 +479,18 @@ body {
   object-fit: cover;
 }
 
+.card-favicon-letter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.2rem;
+  background: var(--color-surface);
+  color: var(--color-muted);
+  font-family: var(--font-mono-ui);
+  font-size: 0.45rem;
+  line-height: 1;
+}
+
 .card-name {
   font-family: var(--font-display);
   font-size: 0.7rem;
@@ -433,7 +518,7 @@ body {
 .skeleton-image {
   aspect-ratio: 3 / 2;
   border-radius: 0.6rem;
-  background: linear-gradient(90deg, var(--color-surface) 25%, #303030 50%, var(--color-surface) 75%);
+  background: linear-gradient(90deg, var(--color-surface) 25%, #222222 50%, var(--color-surface) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
@@ -449,7 +534,7 @@ body {
   width: 0.72rem;
   height: 0.9rem;
   border-radius: 50%;
-  background: linear-gradient(90deg, var(--color-surface) 25%, #303030 50%, var(--color-surface) 75%);
+  background: linear-gradient(90deg, var(--color-surface) 25%, #222222 50%, var(--color-surface) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
@@ -458,7 +543,7 @@ body {
   width: 5rem;
   height: 0.56rem;
   border-radius: 0.15rem;
-  background: linear-gradient(90deg, var(--color-surface) 25%, #303030 50%, var(--color-surface) 75%);
+  background: linear-gradient(90deg, var(--color-surface) 25%, #222222 50%, var(--color-surface) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
@@ -529,7 +614,8 @@ body {
   position: fixed;
   inset: 0;
   z-index: 200;
-  background: rgba(30,30,30,0.85);
+  background: rgba(18,18,18,0.8);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
   backdrop-filter: blur(0.2rem);
   -webkit-backdrop-filter: blur(0.2rem);
 }
@@ -616,7 +702,7 @@ body {
 }
 
 .modal-item:hover {
-  background: #303030;
+  background: #1f1f1f;
   text-decoration: none;
 }
 
@@ -677,12 +763,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2a2a2a;
+  background: #242424;
   border-radius: 0.2rem;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3a3a3a;
+  background: #333333;
 }
 
 /* ============ ABOUT PAGE ============ */

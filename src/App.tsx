@@ -54,6 +54,7 @@ export default function App() {
           element={
             <>
               <Hero
+                sites={sites}
                 onGridClick={handleGrid}
                 onSurpriseMe={handleSurpriseMe}
               />

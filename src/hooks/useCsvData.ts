@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react'
 import { parseCSV, type SiteEntry } from '../lib/csv'
 
+// Built daily by scripts/generate-screenshots.ts, in sync with the previews.
+const SITES_JSON_URL = '/sites.json'
+
 const SHEET_CSV_URL =
   'https://docs.google.com/spreadsheets/d/1FZhps3kBU8d4Kk9EHRmRfpH1J28B1YezrZkt7peTyCI/export?format=csv'
 
@@ -21,6 +24,16 @@ export function useCsvData(): UseCsvDataResult {
     setError(null)
 
     try {
+      const indexRes = await fetch(SITES_JSON_URL, { cache: 'no-cache' }).catch(() => null)
+      if (indexRes?.ok) {
+        const index = (await indexRes.json()) as SiteEntry[]
+        if (Array.isArray(index) && index.length > 0) {
+          setSites(index)
+          return
+        }
+      }
+
+      // Fallback: read the Google Sheet directly.
       const res = await fetch(SHEET_CSV_URL, {
         cache: 'force-cache',
         headers: { 'Accept': 'text/csv,text/plain,*/*' },

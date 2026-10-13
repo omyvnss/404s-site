@@ -25,11 +25,14 @@ export function CardGrid({ sites, loading }: CardGridProps) {
 
   return (
     <div className="gallery-grid" role="list" aria-label="404 design gallery">
-      {sites.map((site) => (
+      {/* preview === null: no usable screenshot yet — hidden until a capture succeeds */}
+      {sites.filter((site) => site.preview !== null).map((site) => (
         <Card
           key={site.url}
           domain={site.domain}
           url={site.url}
+          preview={site.preview}
+          favicon={site.favicon}
         />
       ))}
     </div>

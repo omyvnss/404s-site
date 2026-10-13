@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" color="#fff">
+<defs><mask id="m2"><rect width="100" height="100" fill="#fff"/><circle cx="58" cy="42" r="5" fill="#000"/></mask></defs>
+<path d="M50 10 C55.04 23.119999999999997 76.88 44.96 90 50 C76.88 55.04 55.04 76.88 50 90 C44.96 76.88 23.119999999999997 55.04 10 50 C23.119999999999997 44.96 44.96 23.119999999999997 50 10Z" fill="currentColor" mask="url(#m2)"/>
+</svg>

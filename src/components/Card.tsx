@@ -4,6 +4,9 @@ import { getFaviconUrl, extractCleanUrl } from '../lib/screenshots'
 interface CardProps {
   domain: string
   url: string
+  preview?: string | null
+  /** Local favicon from sites.json; null = site has none, undefined = unknown (Sheet fallback) */
+  favicon?: string | null
 }
 
 const PREVIEW_BASE = '/previews/'
@@ -15,17 +18,18 @@ function generatePreviewFilename(url: string): string {
   return `${safeDomain}.jpg`
 }
 
-export function Card({ domain, url }: CardProps) {
+export function Card({ domain, url, preview, favicon }: CardProps) {
   const [imgSrc, setImgSrc] = useState<string | null>(null)
   const [imgLoaded, setImgLoaded] = useState(false)
-  const [imgFailed, setImgFailed] = useState(false)
+  // preview === null means the generator has no usable screenshot — skip the request.
+  const [imgFailed, setImgFailed] = useState(preview === null)
   const [inView, setInView] = useState(false)
   const cardRef = useRef<HTMLDivElement>(null)
 
   const cleanUrl = extractCleanUrl(url)
-  const faviconUrl = getFaviconUrl(cleanUrl)
+  const faviconUrl = favicon ? `/favicons/${favicon}` : favicon === null ? null : getFaviconUrl(cleanUrl)
   const displayName = domain.replace(/^www\./, '').split('.')[0]
-  const previewFilename = generatePreviewFilename(url)
+  const previewFilename = preview ?? generatePreviewFilename(url)
   const previewUrl = `${PREVIEW_BASE}${previewFilename}`
 
   useEffect(() => {
@@ -96,14 +100,18 @@ export function Card({ domain, url }: CardProps) {
       </a>
 
       <div className="card-meta">
-        <img
-          src={faviconUrl}
-          alt=""
-          className="card-favicon"
-          loading="lazy"
-          decoding="async"
-          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
-        />
+        {faviconUrl ? (
+          <img
+            src={faviconUrl}
+            alt=""
+            className="card-favicon"
+            loading="lazy"
+            decoding="async"
+            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+          />
+        ) : (
+          <span className="card-favicon card-favicon-letter" aria-hidden="true">{firstLetter}</span>
+        )}
         <span className="card-name">{displayName}</span>
       </div>
     </article>

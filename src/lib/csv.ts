@@ -3,6 +3,9 @@ export interface SiteEntry {
   url: string
   dateAdded: string
   name?: string
+  /** Preview filename from sites.json; null = no usable screenshot, undefined = unknown */
+  preview?: string | null
+  favicon?: string | null
 }
 
 function parseCSVLine(line: string): string[] {

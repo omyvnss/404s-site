@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" color="#fff">
+<defs><clipPath id="cl"><rect x="0" y="0" width="49" height="100"/></clipPath>
+<clipPath id="cr"><rect x="51" y="0" width="49" height="100"/></clipPath></defs>
+<path d="M50 9 C54.788 21.464 75.536 42.212 88 47 C75.536 51.788 54.788 72.536 50 85 C45.212 72.536 24.464 51.788 12 47 C24.464 42.212 45.212 21.464 50 9Z" fill="currentColor" clip-path="url(#cl)"/>
+<path d="M50 17 C54.788 29.464 75.536 50.212 88 55 C75.536 59.788 54.788 80.536 50 93 C45.212 80.536 24.464 59.788 12 55 C24.464 50.212 45.212 29.464 50 17Z" fill="currentColor" clip-path="url(#cr)"/>
+</svg>
